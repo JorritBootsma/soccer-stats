@@ -1,0 +1,23 @@
+player_names = [
+    "Abe",
+    "Boy",
+    "Daan",
+    "Doke",
+    "Dylan",
+    "Fabian",
+    "Frank",
+    "Gijs",
+    "IJsbrand",
+    "Jorrit",
+    "Joppe",
+    "Kevin",
+    "Martin",
+    "Mick",
+    "Mitchell",
+    "Mo",
+    "Niekus",
+    "Pelle",
+    "Rik",
+    "Tom",
+]
+player_names.sort()

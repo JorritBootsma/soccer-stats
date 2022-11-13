@@ -1,0 +1,13 @@
+opponents = [
+    "ASV Arsenal 6",
+    "TABA afc 4",
+    "GeuzenMiddenmeer 2",
+    "Zeeburgia avv 11",
+    "AMVJ 3",
+    "AFC 8",
+    "FIT avv 6",
+    "Meer De sv. 7",
+    "DTA Fortius asv 3",
+    "TOS-Actief 3",
+    "JOS Watergraafsmeer 5"
+]
