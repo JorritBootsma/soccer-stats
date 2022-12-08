@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 Base = declarative_base()
 
 try:
-    # Database connection specifics for local Docker SQL Edge Database
+    # Database connection specifics for local PostgreSQL connection
     server = os.environ["DB_SERVER"]
     user = os.environ["DB_USER"]
     password = os.environ["DB_PASSWORD"]
