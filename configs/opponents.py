@@ -10,4 +10,5 @@ opponents = [
     "DTA Fortius asv 3",
     "TOS-Actief 3",
     "JOS Watergraafsmeer 5"
+    "WV-HEDW Zon. 9"
 ]
