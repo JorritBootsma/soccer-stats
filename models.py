@@ -1,4 +1,6 @@
-
+# This script contains the SQLAlchemy models. These classes are mapped to database
+# tables leveraging SQLAlchemy's ORM functionality (Object-Relational-Mapping).
+# Run this script to reset the database (delete & subsequently create all tables)
 from database import Base
 from sqlalchemy import ForeignKey, Column, Integer, String, Date, ARRAY
 from sqlalchemy.orm import relationship
