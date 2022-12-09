@@ -4,8 +4,8 @@ import datetime
 import streamlit as st
 
 import api_requests
-from configs.player_names import player_names
-from configs.opponents import opponents
+from configs.players import players  # These should be taken from the DB
+from configs.opponents import opponents  # These should be taken from the DB
 
 
 if "save_match_to_db" not in st.session_state:
@@ -29,10 +29,18 @@ num_of_opponent_goals = their_goals.text_input("Goals tegen")
 st.write("### Aanwezigheid")
 col1, col2, col3 = st.columns(3)
 active_players = []
-n_in_col1 = math.ceil(len(player_names) / 3)
-n_in_col2 = math.ceil(len(player_names) / 3)
-n_in_col3 = len(player_names) - n_in_col1 - n_in_col2
-for idx, name in enumerate(player_names):
+n_in_col1 = math.ceil(len(players) / 3)
+n_in_col2 = math.ceil(len(players) / 3)
+n_in_col3 = len(players) - n_in_col1 - n_in_col2
+player_names = []
+for idx, player_dict in enumerate(players):
+    try:
+        name = player_dict["name"]
+        player_names.append(name)
+    except KeyError:
+        st.error("Expected key `name` to be in the player dictionary.")
+        raise
+
     active_players.append(name)
     if idx <= n_in_col1:
         col1.checkbox(name, value=True, key=f"p_{idx}")
@@ -58,6 +66,8 @@ while unknown_players:
         )
 
     counter += 1
+
+st.write(st.session_state)
 
 # Extract the active players from the session_state using
 active_players = [
@@ -174,3 +184,16 @@ store_button = st.button(
 
 if store_button:
     st.warning(st.session_state["save_match_to_db"])
+
+
+with st.form("Create Player"):
+    name = st.text_input("Player name")
+    birth_date = st.text_input("Birth date (in yyyy-mm-dd)")
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        response = api_requests.create_player(name, birth_date)
+        st.subheader("Response")
+        if 'ERROR' in response.json():
+            st.error(response.json())
+        else:
+            st.write(response.json())

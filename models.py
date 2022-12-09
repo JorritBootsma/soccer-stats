@@ -33,11 +33,11 @@ class Goal(Base):
 
     # Assume only one goal scorer per goal (one-to-one)
     goals_scorer_id = Column(Integer, ForeignKey("players.id"))
-    goal_scorer = relationship("Player", back_populates="goals_scored", uselist=False)
+    # goal_scorer = relationship("Player", back_populates="goals_scored", uselist=False)
 
     # Assume only one assist giver per goal (one-to-one)
     assist_giver_id = Column(Integer, ForeignKey("players.id"))
-    assist_giver = relationship("Player", back_populates="assists_given", uselist=False)
+    # assist_giver = relationship("Player", back_populates="assists_given", uselist=False)
 
     body_part = Column(String(50))
     half = Column(String(10))
@@ -55,7 +55,7 @@ class Card(Base):
 
     # Assume only one card receiver per card
     card_receiver_id = Column(Integer, ForeignKey("players.id"))
-    card_receiver = relationship("Player", back_populates="cards_received", uselist=False)
+    # card_receiver = relationship("Player", back_populates="cards_received", uselist=False)
 
     card_type = Column(String)
 
@@ -63,13 +63,13 @@ class Card(Base):
 class Player(Base):
     __tablename__ = "players"
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
+    name = Column(String(50), unique=True)
     birth_date = Column(Date)
 
     # One player can have many goals_scored, assists_given and cards_received
-    goals_scored = relationship("Goal", back_populates="goal_scorer")
-    assists_given = relationship("Goal", back_populates="assist_giver")
-    cards_received = relationship("Card", back_populates="card_receiver")
+    # goals_scored = relationship("Goal", back_populates="goal_scorer")
+    # assists_given = relationship("Assist", back_populates="assist_giver")
+    # cards_received = relationship("Card", back_populates="card_receiver")
 
 
 class Team(Base):
@@ -107,19 +107,20 @@ if __name__ == "__main__":
                      table_schema NOT IN ('pg_catalog', 'information_schema');
                  """
                 ).fetchall()
-        table_names = [tables_info[0] for tables_info in all_tables]
-        return table_names
+        table_names_ = [tables_info[0] for tables_info in all_tables]
+        return table_names_
 
 
-    print(get_all_table_names(engine))
+    print(f"All tables: {get_all_table_names(engine)}")
+
+    # Dummy code to drop specific tables using SQL query as string
     table_names = list(get_all_table_names(engine))
-    sql = f"""DROP TABLE IF EXISTS {table_names[0]}, {table_names[1]};"""
+    sql = f"""DROP TABLE IF EXISTS {table_names[0]}, {table_names[1]} cascade;"""
     result = engine.execute(sql)
-    print(get_all_table_names(engine))
-
+    print(f"Tables still left: {get_all_table_names(engine)}")
 
     # Drop all tables if present
-    print(Base.metadata.tables.keys())
+    print(f"Tables in SQLAlchemy metadata: {Base.metadata.tables.keys()}")
     Base.metadata.drop_all(bind=engine)
 
     print(get_all_table_names(engine))
