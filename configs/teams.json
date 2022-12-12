@@ -1,4 +1,5 @@
-opponents = [
+{
+  "teams": [
     "ASV Arsenal 6",
     "TABA afc 4",
     "GeuzenMiddenmeer 2",
@@ -9,6 +10,7 @@ opponents = [
     "Meer De sv. 7",
     "DTA Fortius asv 3",
     "TOS-Actief 3",
-    "JOS Watergraafsmeer 5"
+    "JOS Watergraafsmeer 5",
     "WV-HEDW Zon. 9"
-]
+  ]
+}

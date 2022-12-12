@@ -4,11 +4,11 @@ import models
 import schemas
 
 
-def get_all_matches(db: Session, skip: int = 0, limit: int = 100):
+def get_all_matches(db: Session, skip: int = 0, limit: int = 10000):
     return db.query(models.Match).offset(skip).limit(limit).all()
 
 
-def get_all_goals(db: Session, skip: int = 0, limit: int = 100):
+def get_all_goals(db: Session, skip: int = 0, limit: int = 10000):
     return db.query(models.Goal).offset(skip).limit(limit).all()
 
 
@@ -33,7 +33,7 @@ def create_player(db: Session, player: schemas.PlayerCreate):
     db.add(db_player)
     db.commit()
     db.refresh(db_player)
-    return db_player
+    return player
 
 
 def create_goal(db: Session, goal: schemas.GoalCreate, match_id: int):
@@ -50,3 +50,11 @@ def create_match(db: Session, match: schemas.MatchCreate):
     db.commit()
     db.refresh(db_match)
     return db_match
+
+
+def create_team(db: Session, team: schemas.TeamCreate):
+    db_team = models.Team(**team.dict())
+    db.add(db_team)
+    db.commit()
+    db.refresh(db_team)
+    return db_team

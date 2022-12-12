@@ -1,11 +1,17 @@
+import json
 import math
 
 import datetime
 import streamlit as st
 
 import api_requests
-from configs.players import players  # These should be taken from the DB
-from configs.opponents import opponents  # These should be taken from the DB
+from helper_funcs.general_funcs import load_json_from_filepath
+
+# TODO: These should be taken from the database once the initial load is performed.
+TEAMS_CONFIG_PATH = "configs/teams.json"
+PLAYERS_CONFIG_PATH = "configs/players.json"
+opponents = load_json_from_filepath(TEAMS_CONFIG_PATH)["teams"]
+players = load_json_from_filepath(PLAYERS_CONFIG_PATH)["players"]
 
 
 if "save_match_to_db" not in st.session_state:
@@ -185,7 +191,6 @@ store_button = st.button(
 if store_button:
     st.warning(st.session_state["save_match_to_db"])
 
-
 with st.form("Create Player"):
     name = st.text_input("Player name")
     birth_date = st.text_input("Birth date (in yyyy-mm-dd)")
@@ -197,3 +202,25 @@ with st.form("Create Player"):
             st.error(response.json())
         else:
             st.write(response.json())
+
+
+with st.form("Create Team"):
+    name = st.text_input("Team name")
+    submitted = st.form_submit_button("Submit Team")
+    if submitted:
+        response = api_requests.create_team(name)
+        st.subheader("Response")
+        if 'ERROR' in response.json():
+            st.error(response.json())
+        else:
+            st.write(response.json())
+
+
+st.write("---")
+st.write("To **delete** all data and re-initialize the tables: type 'reset all tables' in the textbox")
+reset_all_tables = st.text_input(
+    "Reset Tables",
+)
+if reset_all_tables == "reset all tables":
+    api_requests.initialize_tables()
+    st.error("All tables are deleted and re-created.")

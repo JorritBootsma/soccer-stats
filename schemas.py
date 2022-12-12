@@ -77,3 +77,14 @@ class Match(MatchBase):
 
     class Config:
         orm_mode = True
+
+
+class TeamBase(BaseModel):
+    club: str
+
+    class Config:
+        orm_mode = True
+
+
+class TeamCreate(TeamBase):
+    pass
