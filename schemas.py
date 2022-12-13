@@ -87,7 +87,7 @@ class MatchBase(BaseModel):
     home_team: Team
     away_team: Team
     their_goals: int
-    players_present: Optional[List[str]]
+    players_present: Optional[List[Player]]
 
 
 class MatchCreate(MatchBase):
