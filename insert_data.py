@@ -47,7 +47,11 @@ date, time = st.columns(2)
 game_date = date.date_input("Wedstrijddatum")
 game_time = time.time_input("Tijd", value=datetime.time(hour=9, minute=0))
 # Match opponent
-opponent = st.selectbox("Tegenstander", options=teams, format_func=lambda option: option.club)
+opponent = st.selectbox(
+    "Tegenstander",
+    options=teams,
+    format_func=lambda option: option.club
+)
 # Match result
 our_goals, hyphen, their_goals = st.columns(3)
 num_of_goals = our_goals.text_input("Goals gemaakt")

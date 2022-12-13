@@ -30,7 +30,14 @@ def create_team(team):
     return response
 
 
-def create_goal(goal_scorer, assist_giver=None, body_part=None, half=None, penalty_kick=None, match_id=None):
+def create_goal(
+        goal_scorer,
+        assist_giver=None,
+        body_part=None,
+        half=None,
+        penalty_kick=None,
+        match_id=None
+):
     url_suffix = "create_goal"
     full_url = BASE_URL + url_suffix
     goal = {
