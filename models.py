@@ -2,7 +2,7 @@
 # tables leveraging SQLAlchemy's ORM functionality (Object-Relational-Mapping).
 # Run this script to reset the database (delete & subsequently create all tables)
 from database import Base
-from sqlalchemy import ForeignKey, Column, Integer, String, Date, ARRAY
+from sqlalchemy import ForeignKey, Column, Integer, String, Date, ARRAY, Boolean
 from sqlalchemy.orm import relationship
 
 
@@ -15,7 +15,7 @@ class Match(Base):
     home_team = Column(Integer, ForeignKey("teams.id"))
     away_team = Column(Integer, ForeignKey("teams.id"))
 
-    their_goals = Integer
+    their_goals = Column(Integer)
 
     our_goals = relationship(
         "Goal",
@@ -61,6 +61,7 @@ class Goal(Base):
 
     body_part = Column(String(50))
     half = Column(String(10))
+    penalty_kick = Column(Boolean)
 
     def __repr__(self):
         return f"<Goal(match_id='{self.match_id}', scorer='{self.goal_scorer}')>"
@@ -78,6 +79,7 @@ class Card(Base):
     card_receiver = relationship(
         "Player",
         back_populates="cards_received",
+        foreign_keys=[card_receiver_id],
         uselist=False
     )
 

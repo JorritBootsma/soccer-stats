@@ -4,6 +4,31 @@ import models
 import schemas
 
 
+def get_all_players(db: Session, skip: int = 0, limit: int = 10000):
+    x = db.query(models.Player).offset(skip).limit(limit).all()
+    print("---------------------------------------------")
+    print(x)
+    print("------------")
+    print(x[0].birth_date)
+    print(type(x[0].birth_date))
+    print("---------------------------------------------")
+
+    return x
+
+
+def get_all_teams(db: Session, skip: int = 0, limit: int = 10000):
+    x = db.query(models.Team).offset(skip).limit(limit).all()
+    print("---------------------------------------------")
+    print(x)
+    print("------------")
+    print(x[0].club)
+    print(type(x[0].club))
+    print(x[0].id)
+    print("---------------------------------------------")
+
+    return x
+
+
 def get_all_matches(db: Session, skip: int = 0, limit: int = 10000):
     return db.query(models.Match).offset(skip).limit(limit).all()
 
@@ -20,12 +45,12 @@ def get_goals_by_assist_giver(db: Session, name: str):
     return db.query(models.Goal).filter(models.Goal.assist_giver == name).all()
 
 
-def create_card(db: Session, card: schemas.CardCreate, match_id, card_type):
-    db_player = models.Card(**card.dict())
-    db.add(db_player)
+def create_card(db: Session, card: schemas.CardCreate):
+    db_card = models.Card(**card.dict())
+    db.add(db_card)
     db.commit()
-    db.refresh(db_player)
-    return db_player
+    db.refresh(db_card)
+    return db_card
 
 
 def create_player(db: Session, player: schemas.PlayerCreate):
@@ -36,14 +61,16 @@ def create_player(db: Session, player: schemas.PlayerCreate):
     return player
 
 
-def create_goal(db: Session, goal: schemas.GoalCreate, match_id: int):
-    db_goal = models.Goal(**goal.dict(), match_id=match_id)
+def create_goal(db: Session, goal: schemas.GoalCreate):
+    db_goal = models.Goal(**goal.dict())
     db.add(db_goal)
     db.commit()
     db.refresh(db_goal)
     return db_goal
 
 
+# This operation needs more sophisticated logic to also possibly create goal= and card-
+# entries. Probably using the .append method of SQLAlchemy
 def create_match(db: Session, match: schemas.MatchCreate):
     db_match = models.Match(**match.dict())
     db.add(db_match)

@@ -1,4 +1,5 @@
 import json
+from requests import Response
 
 
 def load_json_from_filepath(filepath):
@@ -9,3 +10,7 @@ def load_json_from_filepath(filepath):
             print("\nThe file has an invalid JSON format!")
             raise
     return dictionary
+
+
+def response_to_json(response: Response) -> dict:
+    return response.json()

@@ -37,6 +37,20 @@ def initialize_tables():
     return True
 
 
+@app.get("/get_all_players", response_model=list[schemas.Player])
+def get_all_players(db: Session = Depends(get_db)):
+    players = crud.get_all_players(db)
+    print(players)
+    return players
+
+
+@app.get("/get_all_teams", response_model=list[schemas.Team])
+def get_all_teams(db: Session = Depends(get_db)):
+    teams = crud.get_all_teams(db)
+    print(teams)
+    return teams
+
+
 # This is commented out for now due to varying return values-types, might include later
 # @app.post("/create_player", response_model=schemas.PlayerCreate)
 @app.post("/create_player")
@@ -59,9 +73,18 @@ def create_team(team: schemas.TeamCreate, db: Session = Depends(get_db)):
     return crud.create_team(db=db, team=team)
 
 
+@app.post("/create_goal")
+def create_goal(goal: schemas.GoalCreate, db: Session = Depends(get_db)):
+    return crud.create_goal(db=db, goal=goal)
+
+
+# @app.post("/create_card")
+# def create_card(card: schemas.CardCreate, db: Session = Depends(get_db)):
+#     return crud.create_card(db=db, card=card)
+
 
 # @app.post("/create_match")
-# def create_match(db: Session = Depends(get_db)):
+# def create_match(match: schemas.MatchCreate, db: Session = Depends(get_db)):
 #     """
 #     Create a match instance in the database.
 #
