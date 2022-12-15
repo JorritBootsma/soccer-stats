@@ -44,6 +44,13 @@ def get_all_players(db: Session = Depends(get_db)):
     return players
 
 
+@app.get("/get_all_players_with_performance", response_model=list[schemas.PlayerWithPerformance])
+def get_all_players_with_performance(db: Session = Depends(get_db)):
+    players = crud.get_all_players_with_performance(db)
+    return players
+
+
+
 @app.get("/get_all_teams", response_model=list[schemas.Team])
 def get_all_teams(db: Session = Depends(get_db)):
     teams = crud.get_all_teams(db)

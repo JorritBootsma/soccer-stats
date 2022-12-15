@@ -25,7 +25,7 @@ except KeyError as e:
         "Is this on purpose?"
     )
     print(f"Failed on key: {e}")
-    pass
+    raise
 
 # Initialise session class
 Session = sessionmaker()

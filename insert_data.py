@@ -30,13 +30,18 @@ response_players = api_requests.get_all_players()
 response_players = response_to_json(response_players)
 players = [schemas.Player(**player) for player in response_players]
 st.write("Player object example: ", players[0])
+st.write("Type: ", type(players[0]))
 
 
 # Load all teams from database
 response_teams = api_requests.get_all_teams()
 response_teams = response_to_json(response_teams)
 teams = [schemas.Team(**team) for team in response_teams]
+our_team = [team for team in teams if team.club=="WV-HEDW Zon. 9"][0]
+st.write(our_team)
+
 st.write("Club object example: ", teams[0])
+st.write("Type: ", type(teams[0]))
 
 if "save_match_to_db" not in st.session_state:
     st.session_state["save_match_to_db"] = ""
@@ -46,12 +51,21 @@ st.write("### Wedstrijd informatie")
 date, time = st.columns(2)
 game_date = date.date_input("Wedstrijddatum")
 game_time = time.time_input("Tijd", value=datetime.time(hour=9, minute=0))
-# Match opponent
+# Match
 opponent = st.selectbox(
     "Tegenstander",
     options=teams,
     format_func=lambda option: option.club
 )
+play_at_home = st.selectbox(
+    "Thuis of uit?",
+    options=[True, False],
+    format_func=lambda option: "Thuis" if option else "Uit"
+)
+if play_at_home:
+    st.subheader(f"Affiche: {our_team.club} - {opponent.club}")
+else:
+    st.subheader(f"Affiche: {opponent.club} - {our_team.club}")
 # Match result
 our_goals, hyphen, their_goals = st.columns(3)
 num_of_goals = our_goals.text_input("Goals gemaakt")
@@ -97,7 +111,6 @@ while unknown_players:
 
     counter += 1
 
-st.write(st.session_state)
 
 # Extract the active players from the session_state using
 active_players = [
@@ -120,7 +133,7 @@ if not num_of_goals:  # Before specifying, the number of scored goals need to be
         "Selecteer doelpuntenmakers nadat je de eindstand bovenaan hebt ingevoerd."
     )
 else:  # When the number of goals are inserted, show this amount of rows to specify the goals
-    goal, assist, body_part, in_out_box, penalty = st.columns(5)
+    goal, assist, body_part, half, penalty = st.columns(5)
     for idx, _ in enumerate(range(int(num_of_goals))):
         if idx == 0:  # Only show labels above the first row
             goal.selectbox(
@@ -138,13 +151,13 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
             body_part.selectbox(
                 "Lichaamsdeel", options=["R", "L", "Hoofd"], key=f"body_part_{idx}"
             )
-            in_out_box.selectbox(
-                "Binnen of buiten 16m", options=["Binnen", "Buiten"], key=f"box_{idx}"
+            half.selectbox(
+                "1e of 2e helft", options=["Eerste", "Tweede"], key=f"half_{idx}"
             )
             penalty.selectbox(
                 "Pingel?",
-                options=["Ja", "Nee"],
-                format_func=lambda option: True if option == "Ja" else False,
+                options=[False, True],
+                format_func=lambda option: "Ja" if option else "Nee",
                 key=f"penalty_{idx}",
             )
         else:  # Do not show labels above the next rows
@@ -168,18 +181,67 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
                 key=f"body_part_{idx}",
                 label_visibility="collapsed",
             )
-            in_out_box.selectbox(
-                "Binnen of buiten 16m",
-                options=["Binnen", "Buiten"],
-                key=f"box_{idx}",
+            half.selectbox(
+                "1e of 2e helft",
+                options=["Eerste", "Tweede"],
+                key=f"half_{idx}",
                 label_visibility="collapsed",
             )
             penalty.selectbox(
                 "Pingel?",
-                options=["Ja", "Nee"],
+                options=[False, True],
+                format_func=lambda option: "Ja" if option else "Nee",
                 key=f"penalty_{idx}",
                 label_visibility="collapsed",
             )
+
+    # Match object
+    match = schemas.MatchCreate(
+        date=game_date,
+        season="2019/2020",
+        home_team=our_team if play_at_home else opponent,
+        away_team=opponent if play_at_home else our_team,
+        their_goals=int(num_of_opponent_goals),
+        # our_goals=[],
+        # cards=[],
+    )
+
+
+
+    players_present = active_players
+
+    for player in players_present:
+        match.players_present.append(player)
+
+    goals = []
+    for idx in range(int(num_of_goals)):
+        goal_scorer = st.session_state[f"goal_{idx}"]
+        assist_giver = st.session_state[f"assist_{idx}"]
+        body_part = st.session_state[f"body_part_{idx}"]
+        half = st.session_state[f"half_{idx}"]
+        penalty_kick = st.session_state[f"penalty_{idx}"]
+        st.write(match)
+        st.write(goal_scorer)
+        goal = schemas.GoalCreate(
+            goal_scorer=goal_scorer,
+            assist_giver=assist_giver,
+            body_part=body_part,
+            half=half,
+            penalty_kick=penalty_kick,
+        )
+        goals.append(goal)
+
+
+    st.write(match)
+    st.write(players_present)
+    st.write()
+    test_players = api_requests.get_all_players_with_performance()
+    test_players = response_to_json(test_players)
+    st.write(test_players)
+
+    st.write(test_players[0])
+
+
 
 
 st.write("### Panna's")

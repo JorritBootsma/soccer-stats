@@ -87,7 +87,9 @@ class MatchBase(BaseModel):
     home_team: Team
     away_team: Team
     their_goals: int
-    players_present: Optional[List[Player]]
+    players_present: List[Player] = []
+    our_goals: List[Goal] = []
+    cards: List[Card] = []
 
 
 class MatchCreate(MatchBase):
@@ -96,8 +98,6 @@ class MatchCreate(MatchBase):
 
 class Match(MatchBase):
     id: int
-    our_goals: list[Goal]
-    cards: list[Card]
 
     class Config:
         orm_mode = True
@@ -108,7 +108,7 @@ class PlayerWithPerformance(PlayerBase):
     goals_scored: List[Goal]
     assists_given: List[Goal]
     cards_received: List[Card]
-    # matches_played: List[Match]
+    matches_played: List[Match]
 
     class Config:
         orm_mode = True

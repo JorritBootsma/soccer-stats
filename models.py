@@ -1,9 +1,25 @@
 # This script contains the SQLAlchemy models. These classes are mapped to database
 # tables leveraging SQLAlchemy's ORM functionality (Object-Relational-Mapping).
 # Run this script to reset the database (delete & subsequently create all tables)
+from typing import List
 from database import Base
-from sqlalchemy import ForeignKey, Column, Integer, String, Date, ARRAY, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey, Column, Integer, String, Date, Boolean, Table
+from sqlalchemy.orm import relationship, Mapped
+
+
+matches_players = Table(
+    "matches_players",
+    Base.metadata,
+    Column("match_id", ForeignKey("matches.id"), primary_key=True),
+    Column("player_id", ForeignKey("players.id"), primary_key=True),
+)
+
+# matches_teams = Table(
+#     "matches_teams",
+#     Base.metadata,
+#     Column("match_id", ForeignKey("matches.id"), primary_key=True),
+#     Column("teams_id", ForeignKey("teams.id"), primary_key=True),
+# )
 
 
 class Match(Base):
@@ -28,7 +44,12 @@ class Match(Base):
         foreign_keys="Card.match_id"
     )
 
-    players_present = ARRAY(String(ForeignKey("players.id")))
+    # players_present = ARRAY(String(ForeignKey("players.id")))
+    players_present: Mapped[List["Player"]] = relationship(
+        "Player",
+        secondary=matches_players,
+        back_populates="matches_played"
+    )
 
     def __repr__(self):
         return f"<User(name='{self.name}', age='{self.age}')"
@@ -108,6 +129,11 @@ class Player(Base):
         back_populates="card_receiver",
         foreign_keys="Card.card_receiver_id"
     )
+    matches_played: Mapped[List["Match"]] = relationship(
+        "Match",
+        secondary=matches_players,
+        back_populates="players_present",
+    )
 
 
 class Team(Base):
@@ -117,7 +143,7 @@ class Team(Base):
     # team_number = Column(String(50))
     # club_team_concat = club.concat(team_number)
 
-    relationship("Match")
+    # relationship("Match")
 
 
 if __name__ == "__main__":
@@ -135,19 +161,26 @@ if __name__ == "__main__":
 
     print(f"All tables: {get_all_table_names(engine)}")
 
-    # Dummy code to drop specific tables using SQL query as string
-    table_names = list(get_all_table_names(engine))
-    sql = f"""DROP TABLE IF EXISTS {table_names[0]}, {table_names[1]} cascade;"""
-    result = engine.execute(sql)
-    print(f"Tables still left: {get_all_table_names(engine)}")
+    # # Dummy code to drop specific tables using SQL query as string
+    # table_names = list(get_all_table_names(engine))
+    # sql = f"""DROP TABLE IF EXISTS {table_names[0]}, {table_names[1]} cascade;"""
+    # result = engine.execute(sql)
+    # print(f"Tables still left: {get_all_table_names(engine)}")
+    #
+    # # Drop all tables if present
+    # print(f"Tables in SQLAlchemy metadata: {Base.metadata.tables.keys()}")
+    # Base.metadata.drop_all(bind=engine)
+    #
+    # print(get_all_table_names(engine))
+    #
+    # # Create tables
+    # Base.metadata.create_all(engine)
+    #
+    # print(get_all_table_names(engine))
 
-    # Drop all tables if present
-    print(f"Tables in SQLAlchemy metadata: {Base.metadata.tables.keys()}")
-    Base.metadata.drop_all(bind=engine)
-
-    print(get_all_table_names(engine))
-
-    # Create tables
-    Base.metadata.create_all(engine)
-
-    print(get_all_table_names(engine))
+    match = Match(
+        date='2020-1-1',
+        season="2019/2020",
+        home_team="a",
+        away_team="b"
+    )

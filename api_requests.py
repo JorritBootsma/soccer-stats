@@ -54,6 +54,12 @@ def create_goal(
 
 # def create_card(card_type, card_receiver, match_id)
 
+
+def create_match(date, season, home_team, away_team, their_goals):
+    response = requests.post
+    return response
+
+
 def initialize_tables():
     url_suffix = "initialize_tables"
     full_url = BASE_URL + url_suffix
@@ -69,6 +75,13 @@ def get_all_players() -> Response:
 
 def get_all_teams() -> Response:
     url_suffix = "get_all_teams"
+    full_url = BASE_URL + url_suffix
+    response = requests.get(full_url)
+    return response
+
+
+def get_all_players_with_performance() -> Response:
+    url_suffix = "get_all_players_with_performance"
     full_url = BASE_URL + url_suffix
     response = requests.get(full_url)
     return response

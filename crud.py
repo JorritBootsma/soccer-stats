@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy.orm import Session
 
 import models
@@ -5,6 +7,18 @@ import schemas
 
 
 def get_all_players(db: Session, skip: int = 0, limit: int = 10000):
+    x = db.query(models.Player).offset(skip).limit(limit).all()
+    print("---------------------------------------------")
+    print(x)
+    print("------------")
+    print(x[0].birth_date)
+    print(type(x[0].birth_date))
+    print("---------------------------------------------")
+
+    return x
+
+
+def get_all_players_with_performance(db: Session, skip: int = 0, limit: int = 10000):
     x = db.query(models.Player).offset(skip).limit(limit).all()
     print("---------------------------------------------")
     print(x)
@@ -71,8 +85,23 @@ def create_goal(db: Session, goal: schemas.GoalCreate):
 
 # This operation needs more sophisticated logic to also possibly create goal= and card-
 # entries. Probably using the .append method of SQLAlchemy
-def create_match(db: Session, match: schemas.MatchCreate):
+def create_match(
+        db: Session,
+        match: schemas.MatchCreate,
+        players_present: List[schemas.Player],
+        goals: List[schemas.GoalCreate],
+        cards: List[schemas.CardCreate]
+):
+    print(match)
     db_match = models.Match(**match.dict())
+
+    for player in players_present:
+        db_match.players_present.append(player)
+    for goal in goals:
+        db_match.our_goals.append(goal)
+    for card in cards:
+        db_match.cards.append(card)
+
     db.add(db_match)
     db.commit()
     db.refresh(db_match)
