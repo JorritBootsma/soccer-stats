@@ -28,8 +28,23 @@ class Match(Base):
     date = Column(Date)
     season = Column(String)
 
-    home_team = Column(Integer, ForeignKey("teams.id"))
-    away_team = Column(Integer, ForeignKey("teams.id"))
+    # TODO: These should relate to the `teams` table just like the goals and the players
+    #  present.
+    home_team_id = Column(Integer, ForeignKey("teams.id"))
+    away_team_id = Column(Integer, ForeignKey("teams.id"))
+    home_team = relationship(
+        "Team",
+        back_populates="matches_appeared_as_home",
+        foreign_keys=[home_team_id],
+        # useList=False
+    )
+
+    away_team = relationship(
+        "Team",
+        back_populates="matches_appeared_as_away",
+        foreign_keys=[away_team_id],
+        # useList=False
+    )
 
     their_goals = Column(Integer)
 
@@ -52,7 +67,12 @@ class Match(Base):
     )
 
     def __repr__(self):
-        return f"<User(name='{self.name}', age='{self.age}')"
+        return f"<Match(" \
+               f"id='{self.id}', " \
+               f"home_team='{self.home_team}', " \
+               f"away_team='{self.home_team}', " \
+               f"players_present='{self.players_present}" \
+               f")"
 
 
 class Goal(Base):
@@ -91,12 +111,12 @@ class Goal(Base):
 class Card(Base):
     __tablename__ = "cards"
     card_id = Column(Integer, primary_key=True)
-
     match_id = Column(Integer, ForeignKey("matches.id"))
+    card_receiver_id = Column(Integer, ForeignKey("players.id"))
+
     match = relationship("Match", back_populates="cards", foreign_keys=[match_id])
 
     # Assume only one card receiver per card
-    card_receiver_id = Column(Integer, ForeignKey("players.id"))
     card_receiver = relationship(
         "Player",
         back_populates="cards_received",
@@ -143,7 +163,16 @@ class Team(Base):
     # team_number = Column(String(50))
     # club_team_concat = club.concat(team_number)
 
-    # relationship("Match")
+    matches_appeared_as_home = relationship(
+        "Match",
+        back_populates="home_team",
+        foreign_keys="Match.home_team_id"
+    )
+    matches_appeared_as_away = relationship(
+        "Match",
+        back_populates="away_team",
+        foreign_keys="Match.away_team_id"
+    )
 
 
 if __name__ == "__main__":

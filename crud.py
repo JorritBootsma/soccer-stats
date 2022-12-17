@@ -85,25 +85,66 @@ def create_goal(db: Session, goal: schemas.GoalCreate):
 
 # This operation needs more sophisticated logic to also possibly create goal= and card-
 # entries. Probably using the .append method of SQLAlchemy
-def create_match(
-        db: Session,
-        match: schemas.MatchCreate,
-        players_present: List[schemas.Player],
-        goals: List[schemas.GoalCreate],
-        cards: List[schemas.CardCreate]
-):
-    print(match)
-    db_match = models.Match(**match.dict())
+def create_match(db: Session, match_w_details: schemas.MatchCreate):
+    match = {
+        "date": match_w_details.date,
+        "season": match_w_details.season,
+        "their_goals": match_w_details.their_goals,
+    }
 
-    for player in players_present:
-        db_match.players_present.append(player)
-    for goal in goals:
-        db_match.our_goals.append(goal)
-    for card in cards:
-        db_match.cards.append(card)
+    print(match)
+    # print(match["home_team"])
+    # print(type(match["home_team"]))
+
+    db_match = models.Match(**match)
+
+    db_home_team = models.Team(**match_w_details.home_team.dict())
+    db_away_team = models.Team(**match_w_details.away_team.dict())
+    print("######")
+    print(db_home_team)
+    print("######")
+    print(db_match)
+    db_match.home_team = db_home_team
+    db_match.away_team = db_away_team
+
+    # Add each present player to the match database object in players_present
+    for player in match_w_details.players_present:
+        db_player = models.Player(**player.dict())
+        db_match.players_present.append(db_player)
+
+    # Add each goal to the match database object in our_goals
+    for goal in match_w_details.our_goals:
+        # Convert goal_scorer and assist_giver back to Player database objects
+        goal.goal_scorer = models.Player(**goal.goal_scorer.dict())
+        if goal.assist_giver.name:
+            goal.assist_giver = models.Player(**goal.assist_giver.dict())
+        else:
+            goal.assist_giver = None
+
+        db_goal = models.Goal(**goal.dict())
+        print("######")
+        print(db_goal)
+        print("######")
+        db_match.our_goals.append(db_goal)
+
+    for card in match_w_details.cards:
+        # Convert card_receiver back to a Player database object
+        if card.card_receiver.name:
+            card.card_receiver = models.Player(**card.card_receiver.dict())
+        else:
+            card.card_receiver = None
+
+        db_card = models.Card(**card.dict())
+        db_match.cards.append(db_card)
 
     db.add(db_match)
+    print("1###########################################################################")
+    print(db_match)
+    print("###########################################################################")
     db.commit()
+    print("2###########################################################################")
+    print(db_match.our_goals)
+    print("###########################################################################")
     db.refresh(db_match)
     return db_match
 

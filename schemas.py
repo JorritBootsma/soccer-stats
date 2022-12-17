@@ -10,23 +10,6 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class CardBase(BaseModel):
-    card_type: str
-    card_receiver: str
-
-
-class CardCreate(CardBase):
-    match_id: Optional[int]
-
-
-class Card(CardBase):
-    id: int
-    card_receiver_id: int
-
-    class Config:
-        orm_mode = True
-
-
 class TeamBase(BaseModel):
     club: str
 
@@ -46,8 +29,8 @@ class Team(TeamBase):
 
 
 class PlayerBase(BaseModel):
-    name: str
-    birth_date: datetime.date
+    name: Optional[str]
+    birth_date: Optional[datetime.date]
 
 
 class PlayerCreate(PlayerBase):
@@ -55,7 +38,25 @@ class PlayerCreate(PlayerBase):
 
 
 class Player(PlayerBase):
+    id: Optional[int]
+
+    class Config:
+        orm_mode = True
+
+
+class CardBase(BaseModel):
+    card_type: str
+    card_receiver: Player
+
+
+class CardCreate(CardBase):
+    pass
+
+
+class Card(CardBase):
     id: int
+    card_receiver_id: int
+    match_id: Optional[int]
 
     class Config:
         orm_mode = True
@@ -70,7 +71,7 @@ class GoalBase(BaseModel):
 
 
 class GoalCreate(GoalBase):
-    match_id: Optional[int]
+    pass
 
 
 class Goal(GoalBase):
@@ -88,8 +89,8 @@ class MatchBase(BaseModel):
     away_team: Team
     their_goals: int
     players_present: List[Player] = []
-    our_goals: List[Goal] = []
-    cards: List[Card] = []
+    our_goals: List[GoalCreate] = []
+    cards: List[CardCreate] = []
 
 
 class MatchCreate(MatchBase):
@@ -101,6 +102,10 @@ class Match(MatchBase):
 
     class Config:
         orm_mode = True
+
+
+class MatchWithDetails(MatchBase):
+    pass
 
 
 class PlayerWithPerformance(PlayerBase):

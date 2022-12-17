@@ -90,14 +90,15 @@ def create_goal(goal: schemas.GoalCreate, db: Session = Depends(get_db)):
 #     return crud.create_card(db=db, card=card)
 
 
-# @app.post("/create_match")
-# def create_match(match: schemas.MatchCreate, db: Session = Depends(get_db)):
-#     """
-#     Create a match instance in the database.
-#
-#     :return:
-#     """
-#
-#     match = schemas.MatchCreate()
-#     res = crud.create_match(db)
+@app.post("/create_match")
+def create_match(
+        match_with_details: schemas.MatchCreate,
+        db: Session = Depends(get_db)
+):
+    """
+    Create a match instance in the database.
 
+    :return:
+    model.Match() object
+    """
+    return crud.create_match(db=db, match_w_details=match_with_details)

@@ -206,12 +206,11 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
         # cards=[],
     )
 
-
-
     players_present = active_players
 
-    for player in players_present:
-        match.players_present.append(player)
+    # for player in players_present:
+    #     match.players_present.append(player)
+    match.players_present = players_present
 
     goals = []
     for idx in range(int(num_of_goals)):
@@ -231,17 +230,43 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
         )
         goals.append(goal)
 
+    match.our_goals = goals
 
-    st.write(match)
-    st.write(players_present)
-    st.write()
+    st.write(match.date)
+    st.write(match.date.isoformat())
+    match.date = match.date.isoformat()
+    # match.date = "2022-12-17"
+    # st.write('---')
+    # st.write(match)
+    # st.write('---')
+    # st.write(match.dict())
+    # st.write('---')
+    # st.write(match.json(exclude_unset=True))
+    st.write('---')
+    # st.write(match.json(exclude_none=True))
+
+    with st.form("Create Match"):
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            response = api_requests.create_match(
+                match=match,
+                # goals=goals,
+                # cards=cards
+            )
+            st.subheader("Response")
+            st.write(response)
+            if 'ERROR' in response.json():
+                st.error(response.json())
+            else:
+                st.write(response.json())
+
+    st.header("#######")
+
     test_players = api_requests.get_all_players_with_performance()
     test_players = response_to_json(test_players)
     st.write(test_players)
 
     st.write(test_players[0])
-
-
 
 
 st.write("### Panna's")
