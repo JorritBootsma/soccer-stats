@@ -89,23 +89,23 @@ def create_match(db: Session, match_w_details: schemas.MatchCreate):
     match = {
         "date": match_w_details.date,
         "season": match_w_details.season,
+        "home_team": match_w_details.home_team.id,
+        "away_team": match_w_details.away_team.id,
         "their_goals": match_w_details.their_goals,
     }
 
     print(match)
-    # print(match["home_team"])
-    # print(type(match["home_team"]))
 
     db_match = models.Match(**match)
 
-    db_home_team = models.Team(**match_w_details.home_team.dict())
-    db_away_team = models.Team(**match_w_details.away_team.dict())
-    print("######")
-    print(db_home_team)
-    print("######")
-    print(db_match)
-    db_match.home_team = db_home_team
-    db_match.away_team = db_away_team
+    # db_home_team = models.Team(**match_w_details.home_team.dict())
+    # db_away_team = models.Team(**match_w_details.away_team.dict())
+    # print("######")
+    # print(db_home_team)
+    # print("######")
+    # print(db_match)
+    # db_match.home_team = db_home_team
+    # db_match.away_team = db_away_team
 
     # Add each present player to the match database object in players_present
     for player in match_w_details.players_present:

@@ -207,9 +207,6 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
     )
 
     players_present = active_players
-
-    # for player in players_present:
-    #     match.players_present.append(player)
     match.players_present = players_present
 
     goals = []
@@ -219,8 +216,6 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
         body_part = st.session_state[f"body_part_{idx}"]
         half = st.session_state[f"half_{idx}"]
         penalty_kick = st.session_state[f"penalty_{idx}"]
-        st.write(match)
-        st.write(goal_scorer)
         goal = schemas.GoalCreate(
             goal_scorer=goal_scorer,
             assist_giver=assist_giver,
@@ -232,18 +227,8 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
 
     match.our_goals = goals
 
-    st.write(match.date)
-    st.write(match.date.isoformat())
     match.date = match.date.isoformat()
-    # match.date = "2022-12-17"
-    # st.write('---')
-    # st.write(match)
-    # st.write('---')
-    # st.write(match.dict())
-    # st.write('---')
-    # st.write(match.json(exclude_unset=True))
     st.write('---')
-    # st.write(match.json(exclude_none=True))
 
     with st.form("Create Match"):
         submitted = st.form_submit_button("Submit")
@@ -365,22 +350,22 @@ with st.form("Create Goal"):
             st.write(response.json())
 
 
-with st.form("Create Match"):
-    match_date = st.text_input("Date")
-    season = st.selectbox("Season", options=["2021/2022", "2022/2023"])
-    home_team = st.selectbox("Home team", options=["A", "B", "C"])
-    away_team = st.selectbox("Away team", options=['A', 'B', "C"])
-    their_goals = st.text_input("Their goals")
-    players_present = st.multiselect("Players", options=["Anna", "Bob", "Charlotte"])
-    submitted = st.form_submit_button("Submit Match")
-    if submitted:
-        # response = api_requests.create_match(name)
-        # st.subheader("Response")
-        # if 'ERROR' in response.json():
-        #     st.error(response.json())
-        # else:
-        #     st.write(response.json())
-        pass
+# with st.form("Create Match"):
+#     match_date = st.text_input("Date")
+#     season = st.selectbox("Season", options=["2021/2022", "2022/2023"])
+#     home_team = st.selectbox("Home team", options=["A", "B", "C"])
+#     away_team = st.selectbox("Away team", options=['A', 'B', "C"])
+#     their_goals = st.text_input("Their goals")
+#     players_present = st.multiselect("Players", options=["Anna", "Bob", "Charlotte"])
+#     submitted = st.form_submit_button("Submit Match")
+#     if submitted:
+#         # response = api_requests.create_match(name)
+#         # st.subheader("Response")
+#         # if 'ERROR' in response.json():
+#         #     st.error(response.json())
+#         # else:
+#         #     st.write(response.json())
+#         pass
 
 
 st.write("---")

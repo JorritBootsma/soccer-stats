@@ -30,21 +30,23 @@ class Match(Base):
 
     # TODO: These should relate to the `teams` table just like the goals and the players
     #  present.
-    home_team_id = Column(Integer, ForeignKey("teams.id"))
-    away_team_id = Column(Integer, ForeignKey("teams.id"))
-    home_team = relationship(
-        "Team",
-        back_populates="matches_appeared_as_home",
-        foreign_keys=[home_team_id],
-        # useList=False
-    )
-
-    away_team = relationship(
-        "Team",
-        back_populates="matches_appeared_as_away",
-        foreign_keys=[away_team_id],
-        # useList=False
-    )
+    home_team = Column(Integer, ForeignKey("teams.id"))
+    away_team = Column(Integer, ForeignKey("teams.id"))
+    # home_team_id = Column(Integer, ForeignKey("teams.id"))
+    # away_team_id = Column(Integer, ForeignKey("teams.id"))
+    # home_team = relationship(
+    #     "Team",
+    #     back_populates="matches_appeared_as_home",
+    #     foreign_keys=[home_team_id],
+    #     # useList=False
+    # )
+    #
+    # away_team = relationship(
+    #     "Team",
+    #     back_populates="matches_appeared_as_away",
+    #     foreign_keys=[away_team_id],
+    #     # useList=False
+    # )
 
     their_goals = Column(Integer)
 
@@ -60,7 +62,8 @@ class Match(Base):
     )
 
     # players_present = ARRAY(String(ForeignKey("players.id")))
-    players_present: Mapped[List["Player"]] = relationship(
+    # players_present: Column[List["Player"]] = relationship(
+    players_present = relationship(
         "Player",
         secondary=matches_players,
         back_populates="matches_played"
@@ -149,7 +152,8 @@ class Player(Base):
         back_populates="card_receiver",
         foreign_keys="Card.card_receiver_id"
     )
-    matches_played: Mapped[List["Match"]] = relationship(
+    # matches_played: Mapped[List["Match"]] = relationship(
+    matches_played = relationship(
         "Match",
         secondary=matches_players,
         back_populates="players_present",
@@ -163,16 +167,16 @@ class Team(Base):
     # team_number = Column(String(50))
     # club_team_concat = club.concat(team_number)
 
-    matches_appeared_as_home = relationship(
-        "Match",
-        back_populates="home_team",
-        foreign_keys="Match.home_team_id"
-    )
-    matches_appeared_as_away = relationship(
-        "Match",
-        back_populates="away_team",
-        foreign_keys="Match.away_team_id"
-    )
+    # matches_appeared_as_home = relationship(
+    #     "Match",
+    #     back_populates="home_team",
+    #     foreign_keys="Match.home_team_id"
+    # )
+    # matches_appeared_as_away = relationship(
+    #     "Match",
+    #     back_populates="away_team",
+    #     foreign_keys="Match.away_team_id"
+    # )
 
 
 if __name__ == "__main__":
