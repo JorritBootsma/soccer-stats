@@ -6,27 +6,23 @@ import models
 import schemas
 
 
+def get_player_by_id(db: Session, id):
+    x = db.query(models.Player).filter(models.Player.id == id).one()
+    return x
+
+
+def get_team_by_id(db: Session, id):
+    x = db.query(models.Team).filter(models.Team.id == id).one()
+    return x
+
+
 def get_all_players(db: Session, skip: int = 0, limit: int = 10000):
     x = db.query(models.Player).offset(skip).limit(limit).all()
-    print("---------------------------------------------")
-    print(x)
-    print("------------")
-    print(x[0].birth_date)
-    print(type(x[0].birth_date))
-    print("---------------------------------------------")
-
     return x
 
 
 def get_all_players_with_performance(db: Session, skip: int = 0, limit: int = 10000):
     x = db.query(models.Player).offset(skip).limit(limit).all()
-    print("---------------------------------------------")
-    print(x)
-    print("------------")
-    print(x[0].birth_date)
-    print(type(x[0].birth_date))
-    print("---------------------------------------------")
-
     return x
 
 
@@ -83,48 +79,39 @@ def create_goal(db: Session, goal: schemas.GoalCreate):
     return db_goal
 
 
-# This operation needs more sophisticated logic to also possibly create goal= and card-
-# entries. Probably using the .append method of SQLAlchemy
 def create_match(db: Session, match_w_details: schemas.MatchCreate):
     match = {
         "date": match_w_details.date,
         "season": match_w_details.season,
-        "home_team": match_w_details.home_team.id,
-        "away_team": match_w_details.away_team.id,
         "their_goals": match_w_details.their_goals,
     }
 
-    print(match)
-
+    # This match instance is new and needs to be created
     db_match = models.Match(**match)
 
-    # db_home_team = models.Team(**match_w_details.home_team.dict())
-    # db_away_team = models.Team(**match_w_details.away_team.dict())
-    # print("######")
-    # print(db_home_team)
-    # print("######")
-    # print(db_match)
-    # db_match.home_team = db_home_team
-    # db_match.away_team = db_away_team
+    # Look up home_team and away_team in Teams table and add to match
+    db_home_team = get_team_by_id(db, match_w_details.home_team.id)
+    db_match.home_team = db_home_team
+    db_away_team = get_team_by_id(db, match_w_details.away_team.id)
+    db_match.away_team = db_away_team
 
     # Add each present player to the match database object in players_present
     for player in match_w_details.players_present:
-        db_player = models.Player(**player.dict())
+        # Look up player in Player database
+        db_player = get_player_by_id(db, player.id)
         db_match.players_present.append(db_player)
 
     # Add each goal to the match database object in our_goals
     for goal in match_w_details.our_goals:
-        # Convert goal_scorer and assist_giver back to Player database objects
-        goal.goal_scorer = models.Player(**goal.goal_scorer.dict())
+        # Look-up goal_scorer and assist_giver in Player database
+        goal.goal_scorer = get_player_by_id(db, goal.goal_scorer.id)
         if goal.assist_giver.name:
-            goal.assist_giver = models.Player(**goal.assist_giver.dict())
+            goal.assist_giver = get_player_by_id(db, goal.assist_giver.id)
         else:
             goal.assist_giver = None
 
+        # This goal instance is new and needs to be created
         db_goal = models.Goal(**goal.dict())
-        print("######")
-        print(db_goal)
-        print("######")
         db_match.our_goals.append(db_goal)
 
     for card in match_w_details.cards:
@@ -134,18 +121,36 @@ def create_match(db: Session, match_w_details: schemas.MatchCreate):
         else:
             card.card_receiver = None
 
+        # This card instance is new and needs to be created
         db_card = models.Card(**card.dict())
         db_match.cards.append(db_card)
 
     db.add(db_match)
-    print("1###########################################################################")
-    print(db_match)
-    print("###########################################################################")
     db.commit()
-    print("2###########################################################################")
-    print(db_match.our_goals)
+
+    # Some code on retreiving data from database by Player and by Team
+    print('-----')
+    mitch = get_player_by_id(db, id=15)
+    print("ID = ", mitch.id)
+    print("Goals scored:")
+    print(mitch.goals_scored)
+    print("Assists given:")
+    print(mitch.assists_given)
+    print("Cards received:")
+    print(mitch.cards_received)
+    print("Matches played:")
+    print(mitch.matches_played)
+    print("Number of Matches played:", len(mitch.matches_played))
+    print('-----')
     print("###########################################################################")
+
+    arsenal = get_team_by_id(db, id=1)
+    print("Club = ", arsenal.club)
+    print("# of Matches as home team: ", len(arsenal.matches_appeared_as_home))
+    print("Matches as away team: ", len(arsenal.matches_appeared_as_away))
     db.refresh(db_match)
+
+
     return db_match
 
 

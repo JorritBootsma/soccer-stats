@@ -6,6 +6,7 @@ import requests
 from requests import Response
 
 import schemas
+from helper_funcs.general_funcs import smart_jsonify
 
 BASE_URL = "http://127.0.0.1:8000/"
 
@@ -56,43 +57,9 @@ def create_goal(
 # def create_card(card_type, card_receiver, match_id)
 
 
-def create_match(
-        # date,
-        # season,
-        # home_team,
-        # away_team,
-        # their_goals,
-        # goal_scorer,
-        # assist_giver=None,
-        # body_part=None,
-        # half=None,
-        # penalty_kick=None,
-        # card_type=None,
-        # card_receiver=None
-        match: schemas.MatchCreate,
-):
+def create_match(match: schemas.MatchCreate):
     url_suffix = "create_match"
     full_url = BASE_URL + url_suffix
-
-    # match_details = {
-    #     "date": date,
-    #     "season": season,
-    #     "home_team": home_team,
-    #     "away_team": away_team,
-    #     "their_goals": their_goals,
-    #     "goal_scorer": goal_scorer,
-    #     "assist_giver": assist_giver,
-    #     "body_part": body_part,
-    #     "half": half,
-    #     "penalty_kick": penalty_kick,
-    #     "card_type": card_type,
-    #     "card_receiver": card_receiver,
-    # }
-
-    def smart_jsonify(object):
-        if isinstance(object, datetime.date):
-            return object.isoformat()
-        raise TypeError("Type %s not serializable" % type(object))
 
     jsonified = json.dumps(match.dict(), default=smart_jsonify)
     response = requests.post(full_url, data=jsonified)
@@ -103,6 +70,12 @@ def initialize_tables():
     url_suffix = "initialize_tables"
     full_url = BASE_URL + url_suffix
     response = requests.delete(full_url)
+
+
+def create_tables():
+    url_suffix = "create_tables"
+    full_url = BASE_URL + url_suffix
+    response = requests.post(full_url)
 
 
 def get_all_players() -> Response:

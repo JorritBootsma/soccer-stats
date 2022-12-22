@@ -18,7 +18,7 @@ try:
     print(conn_string)
 
     # Create engine
-    engine = create_engine(conn_string)
+    engine = create_engine(conn_string, echo=True)
 except KeyError as e:
     print(
         "Failed to extract database details environment variables. "

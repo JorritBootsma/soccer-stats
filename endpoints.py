@@ -37,6 +37,12 @@ def initialize_tables():
     return True
 
 
+@app.post("/create_tables")
+def create_tables():
+    initial_load.create(Base, engine)
+    return True
+
+
 @app.get("/get_all_players", response_model=list[schemas.Player])
 def get_all_players(db: Session = Depends(get_db)):
     players = crud.get_all_players(db)

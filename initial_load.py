@@ -10,6 +10,13 @@ teams = load_json_from_filepath(TEAMS_CONFIG_PATH)["teams"]
 players = load_json_from_filepath(PLAYERS_CONFIG_PATH)["players"]
 
 
+def create(sa_base, engine):
+    print(f"All tables, initially: {get_all_table_names(engine)}")
+    print(f"Tables in SQLAlchemy metadata: {sa_base.metadata.tables.keys()}")
+    sa_base.metadata.create_all(engine)
+    print(f"All tables after creating: {get_all_table_names(engine)}")
+
+
 def drop_and_create(sa_base, engine):
     print(f"All tables, initially: {get_all_table_names(engine)}")
 

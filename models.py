@@ -10,16 +10,23 @@ from sqlalchemy.orm import relationship, Mapped
 matches_players = Table(
     "matches_players",
     Base.metadata,
-    Column("match_id", ForeignKey("matches.id"), primary_key=True),
-    Column("player_id", ForeignKey("players.id"), primary_key=True),
+    Column("match_id", ForeignKey("matches.id", ondelete='cascade'), primary_key=True),
+    Column("player_id", ForeignKey("players.id", ondelete='cascade'), primary_key=True),
 )
 
-# matches_teams = Table(
-#     "matches_teams",
-#     Base.metadata,
-#     Column("match_id", ForeignKey("matches.id"), primary_key=True),
-#     Column("teams_id", ForeignKey("teams.id"), primary_key=True),
-# )
+matches_home_teams = Table(
+    "matches_home_teams",
+    Base.metadata,
+    Column("match_id", ForeignKey("matches.id", ondelete='cascade'), primary_key=True),
+    Column("teams_id", ForeignKey("teams.id", ondelete='cascade'), primary_key=True),
+)
+
+matches_away_teams = Table(
+    "matches_away_teams",
+    Base.metadata,
+    Column("match_id", ForeignKey("matches.id", ondelete='cascade'), primary_key=True),
+    Column("teams_id", ForeignKey("teams.id", ondelete='cascade'), primary_key=True),
+)
 
 
 class Match(Base):
@@ -30,35 +37,39 @@ class Match(Base):
 
     # TODO: These should relate to the `teams` table just like the goals and the players
     #  present.
-    home_team = Column(Integer, ForeignKey("teams.id"))
-    away_team = Column(Integer, ForeignKey("teams.id"))
-    # home_team_id = Column(Integer, ForeignKey("teams.id"))
-    # away_team_id = Column(Integer, ForeignKey("teams.id"))
-    # home_team = relationship(
-    #     "Team",
-    #     back_populates="matches_appeared_as_home",
-    #     foreign_keys=[home_team_id],
-    #     # useList=False
-    # )
-    #
-    # away_team = relationship(
-    #     "Team",
-    #     back_populates="matches_appeared_as_away",
-    #     foreign_keys=[away_team_id],
-    #     # useList=False
-    # )
+    home_team = relationship(
+        "Team",
+        secondary=matches_home_teams,
+        backref="matches_appeared_as_home",
+        uselist=False,
+        cascade="all, delete",
+        # passive_deletes=True,
+        # delete_orphan=True,
+    )
+
+    away_team = relationship(
+        "Team",
+        secondary=matches_away_teams,
+        backref="matches_appeared_as_away",
+        uselist=False,
+        cascade="all, delete",
+        # passive_deletes=True,
+        # delete_orphan=True,
+    )
 
     their_goals = Column(Integer)
 
     our_goals = relationship(
         "Goal",
         back_populates="match",
-        foreign_keys="Goal.match_id"
+        foreign_keys="Goal.match_id",
+        cascade="all,delete"
     )
     cards = relationship(
         "Card",
         back_populates="match",
-        foreign_keys="Card.match_id"
+        foreign_keys="Card.match_id",
+        cascade="all,delete"
     )
 
     # players_present = ARRAY(String(ForeignKey("players.id")))
@@ -66,7 +77,8 @@ class Match(Base):
     players_present = relationship(
         "Player",
         secondary=matches_players,
-        back_populates="matches_played"
+        backref="matches_played",
+        cascade= "all,delete"
     )
 
     def __repr__(self):
@@ -108,7 +120,7 @@ class Goal(Base):
     penalty_kick = Column(Boolean)
 
     def __repr__(self):
-        return f"<Goal(match_id='{self.match_id}', scorer='{self.goal_scorer}')>"
+        return f"<Goal(match_id='{self.match_id}', scorer='{self.goal_scorer.name}')>"
 
 
 class Card(Base):
@@ -153,11 +165,11 @@ class Player(Base):
         foreign_keys="Card.card_receiver_id"
     )
     # matches_played: Mapped[List["Match"]] = relationship(
-    matches_played = relationship(
-        "Match",
-        secondary=matches_players,
-        back_populates="players_present",
-    )
+    # matches_played = relationship(
+    #     "Match",
+    #     secondary=matches_players,
+    #     back_populates="players_present",
+    # )
 
 
 class Team(Base):

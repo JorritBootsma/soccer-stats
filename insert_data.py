@@ -1,4 +1,3 @@
-import json
 import math
 
 import datetime
@@ -8,29 +7,19 @@ import api_requests
 from helper_funcs.general_funcs import response_to_json
 import schemas
 
-# ######## These are now loaded from the database #########
-# TEAMS_CONFIG_PATH = "configs/teams.json"
-# PLAYERS_CONFIG_PATH = "configs/players.json"
-# opponents = load_json_from_filepath(TEAMS_CONFIG_PATH)["teams"]
-# players = load_json_from_filepath(PLAYERS_CONFIG_PATH)["players"]
-#
-# with st.form("Get all players"):
-#     submitted = st.form_submit_button("Get Players!")
-#     if submitted:
-#         response = api_requests.get_all_players()
-#         st.subheader("Response")
-#         if 'ERROR' in response.json():
-#             st.error(response.json())
-#         else:
-#             st.write(response.json())
-###########################################################
-
 # Load all players from database
 response_players = api_requests.get_all_players()
 response_players = response_to_json(response_players)
 players = [schemas.Player(**player) for player in response_players]
 st.write("Player object example: ", players[0])
 st.write("Type: ", type(players[0]))
+
+with st.form("Create tables"):
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        response = api_requests.create_tables()
+        st.subheader("Response")
+        st.write(response)
 
 
 # Load all teams from database
@@ -128,7 +117,7 @@ other_players = [
 active_players = active_players + other_players
 
 st.write("### Doelpuntenmakers")
-if not num_of_goals:  # Before specifying, the number of scored goals need to be inserted
+if not num_of_goals or not num_of_opponent_goals:  # Before specifying, the number of scored goals need to be inserted
     st.warning(
         "Selecteer doelpuntenmakers nadat je de eindstand bovenaan hebt ingevoerd."
     )
@@ -202,8 +191,6 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
         home_team=our_team if play_at_home else opponent,
         away_team=opponent if play_at_home else our_team,
         their_goals=int(num_of_opponent_goals),
-        # our_goals=[],
-        # cards=[],
     )
 
     players_present = active_players
@@ -247,11 +234,12 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
 
     st.header("#######")
 
-    test_players = api_requests.get_all_players_with_performance()
-    test_players = response_to_json(test_players)
-    st.write(test_players)
+    # test_players = api_requests.get_all_players_with_performance()
+    # st.write(test_players)
+    # test_players = response_to_json(test_players)
+    # st.write(test_players)
 
-    st.write(test_players[0])
+    # st.write(test_players[0])
 
 
 st.write("### Panna's")
@@ -348,24 +336,6 @@ with st.form("Create Goal"):
             st.error(response.json())
         else:
             st.write(response.json())
-
-
-# with st.form("Create Match"):
-#     match_date = st.text_input("Date")
-#     season = st.selectbox("Season", options=["2021/2022", "2022/2023"])
-#     home_team = st.selectbox("Home team", options=["A", "B", "C"])
-#     away_team = st.selectbox("Away team", options=['A', 'B', "C"])
-#     their_goals = st.text_input("Their goals")
-#     players_present = st.multiselect("Players", options=["Anna", "Bob", "Charlotte"])
-#     submitted = st.form_submit_button("Submit Match")
-#     if submitted:
-#         # response = api_requests.create_match(name)
-#         # st.subheader("Response")
-#         # if 'ERROR' in response.json():
-#         #     st.error(response.json())
-#         # else:
-#         #     st.write(response.json())
-#         pass
 
 
 st.write("---")
