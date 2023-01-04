@@ -21,6 +21,16 @@ def get_all_players(db: Session, skip: int = 0, limit: int = 10000):
     return x
 
 
+def get_player_goals(db: Session, player_id):
+    x = db.query(models.Player).filter(models.Player.id == player_id).one()
+    return x.goals_scored
+
+
+def get_player_with_performance(db: Session, player_id):
+    x = db.query(models.Player).filter(models.Player.id == player_id).one()
+    return x
+
+
 def get_all_players_with_performance(db: Session, skip: int = 0, limit: int = 10000):
     x = db.query(models.Player).offset(skip).limit(limit).all()
     return x
@@ -28,14 +38,6 @@ def get_all_players_with_performance(db: Session, skip: int = 0, limit: int = 10
 
 def get_all_teams(db: Session, skip: int = 0, limit: int = 10000):
     x = db.query(models.Team).offset(skip).limit(limit).all()
-    print("---------------------------------------------")
-    print(x)
-    print("------------")
-    print(x[0].club)
-    print(type(x[0].club))
-    print(x[0].id)
-    print("---------------------------------------------")
-
     return x
 
 

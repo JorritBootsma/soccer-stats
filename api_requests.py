@@ -92,6 +92,24 @@ def get_all_teams() -> Response:
     return response
 
 
+def get_player_goals(player: schemas.Player) -> Response:
+    url_suffix = "get_player_goals"
+    full_url = BASE_URL + url_suffix
+
+    jsonified = json.dumps(player.dict(), default=smart_jsonify)
+    response = requests.get(full_url, data=jsonified)
+    return response
+
+
+def get_player_with_performance(player: schemas.Player) -> Response:
+    url_suffix = "get_player_with_performance"
+    full_url = BASE_URL + url_suffix
+
+    jsonified = json.dumps(player.dict(), default=smart_jsonify)
+    response = requests.get(full_url, data=jsonified)
+    return response
+
+
 def get_all_players_with_performance() -> Response:
     url_suffix = "get_all_players_with_performance"
     full_url = BASE_URL + url_suffix

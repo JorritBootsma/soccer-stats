@@ -89,12 +89,11 @@ class MatchBase(BaseModel):
     away_team: Team
     their_goals: int
     players_present: List[Player] = []
-    our_goals: List[GoalCreate] = []
-    cards: List[CardCreate] = []
 
 
 class MatchCreate(MatchBase):
-    pass
+    our_goals: List[GoalCreate] = []
+    cards: List[CardCreate] = []
 
 
 class Match(MatchBase):

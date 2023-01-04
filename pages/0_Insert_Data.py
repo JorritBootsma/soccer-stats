@@ -8,8 +8,8 @@ from helper_funcs.general_funcs import response_to_json
 import schemas
 
 
-st.markdown("# Main page 🎈")
-st.sidebar.markdown("# Main page 🎈")
+st.markdown("# Insert Data 🧑‍💻")
+st.sidebar.markdown("# Insert Data 🧑‍💻")
 
 st.write("---")
 st.write("To **delete** all data and re-initialize the tables: type 'reset all tables' in the textbox")

@@ -50,11 +50,21 @@ def get_all_players(db: Session = Depends(get_db)):
     return players
 
 
+@app.get("/get_player_goals", response_model=list[schemas.Goal])
+def get_player_goals(player: schemas.Player, db: Session = Depends(get_db)):
+    res = crud.get_player_goals(db=db, player_id=player.id)
+    return res
+
+
+@app.get("/get_player_with_performance", response_model=schemas.PlayerWithPerformance)
+def get_player_with_performance(player: schemas.Player, db: Session = Depends(get_db)):
+    return crud.get_player_with_performance(db=db, player_id=player.id)
+
+
 @app.get("/get_all_players_with_performance", response_model=list[schemas.PlayerWithPerformance])
 def get_all_players_with_performance(db: Session = Depends(get_db)):
     players = crud.get_all_players_with_performance(db)
     return players
-
 
 
 @app.get("/get_all_teams", response_model=list[schemas.Team])
