@@ -5,7 +5,7 @@
 # endpoints, such as /create_match
 
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -98,6 +98,8 @@ class MatchCreate(MatchBase):
 
 class Match(MatchBase):
     id: int
+    our_goals: List[Goal] = []
+    cards: List[Card] = []
 
     class Config:
         orm_mode = True
@@ -116,3 +118,7 @@ class PlayerWithPerformance(PlayerBase):
 
     class Config:
         orm_mode = True
+
+
+class ListOfIDs(BaseModel):
+    ids: List[int]

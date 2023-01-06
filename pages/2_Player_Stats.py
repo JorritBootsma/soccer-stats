@@ -1,3 +1,5 @@
+import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 import api_requests
@@ -14,18 +16,115 @@ response_players = api_requests.get_all_players()
 response_players = response_to_json(response_players)
 players = [schemas.Player(**player) for player in response_players]
 
-with st.form("Get Information Of Specific Player"):
-    st.write("##### Get Info of Specific Player")
-    index = int(st.text_input("Index in players list (8 = ijsbrand)", value=8))
-    player = players[index]
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        st.write(player)
-        response = api_requests.get_player_with_performance(player)
+player = st.selectbox(
+    "Van welke speler wil je statistieken zien?",
+    options=players,
+    format_func=lambda option: option.name,
+)
 
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response)
-            test_players = response_to_json(response)
-            st.write(test_players)
+response = api_requests.get_player_with_performance(player)
+player_with_performance = response_to_json(response)
+player = schemas.PlayerWithPerformance(**player_with_performance)
+
+st.markdown("### 🏆️ Presence")
+presence = player.matches_played
+if presence:
+    presence_df = pd.DataFrame({
+        "match_ids": [match.id for match in presence],
+        "Dates": [match.date for match in presence],
+        "Presence": [1]*len(presence),
+    })
+    presence_df["Presence (cum)"] = presence_df["Presence"].cumsum()
+    presence_fig = px.line(
+        presence_df,
+        x="Dates",
+        y="Presence (cum)",
+        # title="Presence over time"
+    )
+
+    st.plotly_chart(presence_fig)
+
+
+st.markdown("### ⚽️ Goals")
+goals = player.goals_scored
+if goals:
+    # Get the number of goals scored per match
+    individual_goals = [goal.match_id for goal in goals]
+    unique_match_ids_w_his_goals = list(set([goal.match_id for goal in goals]))
+    num_goals_per_match = {
+        match_id: individual_goals.count(match_id)
+        for match_id in unique_match_ids_w_his_goals
+    }
+    num_goals_per_match = dict(sorted(num_goals_per_match.items()))
+    # st.write("match_id: num_of_goals")
+    # st.write(num_goals_per_match)
+
+    # TODO: Alternatively we could introduce a many-to-many relation between matches
+    #  and goals to have the complete match object directly available from a goal object
+    # Via the `goal.match_id`, retrieve the `match` object to get the match dates
+    response = api_requests.get_all_matches(ids=unique_match_ids_w_his_goals)
+    scored_in_matches = response_to_json(response)
+    scored_in_matches = [schemas.Match(**match) for match in scored_in_matches]
+    dates = [match.date for match in scored_in_matches]
+
+    dates_per_match = {match.id: match.date for match in scored_in_matches}
+    dates_per_match = dict(sorted(dates_per_match.items()))
+    # st.write("match_id: date")
+    # st.write(dates_per_match)
+
+    goals_df = pd.DataFrame({
+        "match_ids": dates_per_match.keys(),
+        "Dates": dates_per_match.values(),
+        "Goals scored": num_goals_per_match.values(),
+    })
+    goals_df["Goals scored (cum)"] = goals_df["Goals scored"].cumsum()
+    goals_fig = px.line(
+        goals_df,
+        x="Dates",
+        y="Goals scored (cum)",
+        # title="Goals scored time"
+    )
+
+    st.plotly_chart(goals_fig)
+
+st.markdown("### 👞 Assists")
+assists = player.assists_given
+if assists:
+    # Get the number of assists given per match
+    individual_assists = [goal_obj.match_id for goal_obj in assists]
+    unique_match_ids_w_his_assists = list(set([goal_obj.match_id for goal_obj in assists]))
+    num_assists_per_match = {
+        int(match_id): individual_assists.count(match_id)
+        for match_id in unique_match_ids_w_his_assists
+    }
+    num_assists_per_match = dict(sorted(num_assists_per_match.items()))
+    # st.write(num_assists_per_match)
+
+    match_ids_w_his_assists = list(set([assist.match_id for assist in assists]))
+    # st.write("match_id: num_of_assists")
+    # st.write(f"Assists given in matches: {match_ids_w_his_assists}")
+
+    # Via the `goal.match_id`, retrieve the `match` object to get the match dates
+    response = api_requests.get_all_matches(ids=match_ids_w_his_assists)
+    gave_assist_in_matches = response_to_json(response)
+    gave_assist_in_matches = [schemas.Match(**match) for match in gave_assist_in_matches]
+
+    dates_per_match = {int(match.id): match.date for match in gave_assist_in_matches}
+    dates_per_match = dict(sorted(dates_per_match.items()))
+    # st.write("match_id: date")
+    # st.write(dates_per_match)
+
+    assists_df = pd.DataFrame({
+        "match_ids": dates_per_match.keys(),
+        "Dates": dates_per_match.values(),
+        "Assists given": num_assists_per_match.values(),
+    })
+    assists_df["Assists given (cum)"] = assists_df["Assists given"].cumsum()
+    assists_fig = px.line(
+        assists_df,
+        x="Dates",
+        y="Assists given (cum)",
+        # title="Assists over time"
+    )
+
+    st.plotly_chart(assists_fig)

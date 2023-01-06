@@ -6,7 +6,7 @@ from models import *
 import schemas
 from database import Session, engine
 from sqlalchemy.exc import IntegrityError
-
+from typing import Optional, List, Union
 app = FastAPI(debug=True)
 
 
@@ -72,6 +72,15 @@ def get_all_teams(db: Session = Depends(get_db)):
     teams = crud.get_all_teams(db)
     print(teams)
     return teams
+
+
+@app.post("/get_all_matches", response_model=list[schemas.Match])
+def get_all_matches(ids: schemas.ListOfIDs = None, db: Session = Depends(get_db)):
+    if ids:
+        matches = crud.get_all_matches(db, ids.ids)
+    else:
+        matches = crud.get_all_matches(db)
+    return matches
 
 
 # This is commented out for now due to varying return values-types, might include later

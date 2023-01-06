@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from sqlalchemy.orm import Session
 
@@ -41,8 +41,28 @@ def get_all_teams(db: Session, skip: int = 0, limit: int = 10000):
     return x
 
 
-def get_all_matches(db: Session, skip: int = 0, limit: int = 10000):
-    return db.query(models.Match).offset(skip).limit(limit).all()
+def get_all_matches(
+    db: Session, ids: Union[List[int], None] = None, skip: int = 0, limit: int = 10000
+):
+    # If a list of ids is passed, only return these matches
+    if ids:
+        matches = (
+            db.query(models.Match)
+            .filter(models.Match.id.in_(ids))
+            .order_by(models.Match.date.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+    else:
+        matches = (
+            db.query(models.Match)
+            .order_by(models.Match.date.desc())
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+    return matches
 
 
 def get_all_goals(db: Session, skip: int = 0, limit: int = 10000):
@@ -131,7 +151,7 @@ def create_match(db: Session, match_w_details: schemas.MatchCreate):
     db.commit()
 
     # Some code on retreiving data from database by Player and by Team
-    print('-----')
+    print("-----")
     mitch = get_player_by_id(db, id=15)
     print("ID = ", mitch.id)
     print("Goals scored:")
@@ -143,7 +163,7 @@ def create_match(db: Session, match_w_details: schemas.MatchCreate):
     print("Matches played:")
     print(mitch.matches_played)
     print("Number of Matches played:", len(mitch.matches_played))
-    print('-----')
+    print("-----")
     print("###########################################################################")
 
     arsenal = get_team_by_id(db, id=1)
@@ -151,7 +171,6 @@ def create_match(db: Session, match_w_details: schemas.MatchCreate):
     print("# of Matches as home team: ", len(arsenal.matches_appeared_as_home))
     print("Matches as away team: ", len(arsenal.matches_appeared_as_away))
     db.refresh(db_match)
-
 
     return db_match
 

@@ -35,8 +35,6 @@ class Match(Base):
     date = Column(Date)
     season = Column(String)
 
-    # TODO: These should relate to the `teams` table just like the goals and the players
-    #  present.
     home_team = relationship(
         "Team",
         secondary=matches_home_teams,
@@ -97,7 +95,11 @@ class Goal(Base):
     goal_scorer_id = Column(Integer, ForeignKey("players.id"))
     assist_giver_id = Column(Integer, ForeignKey("players.id"))
 
-    match = relationship("Match", back_populates="our_goals", foreign_keys=[match_id])
+    match = relationship(
+        "Match",
+        back_populates="our_goals",
+        foreign_keys=[match_id]
+    )
 
     # Assume only one goal scorer per goal (one-to-one)
     goal_scorer = relationship(

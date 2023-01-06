@@ -1,7 +1,7 @@
 # This module contains functions that are called from the frontend and send a request to the backend.
 import datetime
 import json
-from typing import List, Optional
+from typing import List, Optional, Union
 import requests
 from requests import Response
 
@@ -87,6 +87,24 @@ def get_all_players() -> Response:
 
 def get_all_teams() -> Response:
     url_suffix = "get_all_teams"
+    full_url = BASE_URL + url_suffix
+    response = requests.get(full_url)
+    return response
+
+
+# def get_all_matches(ids: Union[List[int], None] = None) -> Response:
+def get_all_matches(ids: List[int] = None) -> Response:
+    url_suffix = "get_all_matches"
+    full_url = BASE_URL + url_suffix
+    if ids:
+        response = requests.post(full_url, json={"ids": ids})
+    else:
+        response = requests.post(full_url)
+    return response
+
+
+def get_match_by_id() -> Response:
+    url_suffix = "get_match_by_id"
     full_url = BASE_URL + url_suffix
     response = requests.get(full_url)
     return response
