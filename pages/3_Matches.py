@@ -90,13 +90,3 @@ for match in matches:
             st.write(player)
 
     st.write("---")
-
-
-# import locale, time
-# time.strftime("%B") 'August'
-# locale.getlocale() (None, None)
-# locale.setlocale(locale.LC_ALL, "") 'nl_NL'
-# locale.getlocale() ('nl_NL', 'ISO8859-1')
-# time.strftime("%B") 'augustus'
-#
-# time.strptime("10 augustus 2005 om 17:26", "%d %B %Y om %H:%M")
