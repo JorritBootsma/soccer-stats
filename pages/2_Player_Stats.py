@@ -34,6 +34,7 @@ if presence:
         "Dates": [match.date for match in presence],
         "Presence": [1]*len(presence),
     })
+    presence_df.sort_values("Dates", inplace=True)
     presence_df["Presence (cum)"] = presence_df["Presence"].cumsum()
     presence_fig = px.line(
         presence_df,
@@ -77,6 +78,7 @@ if goals:
         "Dates": dates_per_match.values(),
         "Goals scored": num_goals_per_match.values(),
     })
+    goals_df.sort_values("Dates", inplace=True)
     goals_df["Goals scored (cum)"] = goals_df["Goals scored"].cumsum()
     goals_fig = px.line(
         goals_df,
@@ -119,6 +121,7 @@ if assists:
         "Dates": dates_per_match.values(),
         "Assists given": num_assists_per_match.values(),
     })
+    assists_df.sort_values("Dates", inplace=True)
     assists_df["Assists given (cum)"] = assists_df["Assists given"].cumsum()
     assists_fig = px.line(
         assists_df,
