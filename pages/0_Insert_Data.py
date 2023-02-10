@@ -4,12 +4,18 @@ import datetime
 import streamlit as st
 
 import api_requests
+import style_config
 from helper_funcs.general_funcs import response_to_json
+from helper_funcs.streamlit_components import insert_page_heading
 import schemas
 
+st.set_page_config(
+    page_title=style_config.page_titles,
+    page_icon=style_config.page_favicon
+)
 
-st.markdown("# Insert Data 🧑‍💻")
-st.sidebar.markdown("# Insert Data 🧑‍💻")
+insert_page_heading("# 🧑‍💻 Insert Data", style_config.page_favicon)
+st.sidebar.markdown("# 🧑‍💻 Insert Data")
 
 st.write("---")
 st.write("To **delete** all data and re-initialize the tables: type 'reset all tables' in the textbox")

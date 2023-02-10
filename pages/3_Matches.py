@@ -3,12 +3,20 @@ import locale
 import streamlit as st
 
 import api_requests
+import style_config
 from helper_funcs.general_funcs import response_to_json
 import schemas
 from Main_Page import OUR_TEAM
+from helper_funcs.streamlit_components import insert_page_heading
+
 locale.setlocale(locale.LC_ALL, "nl_NL")
 
-st.markdown("# ⛳️ Matches")
+st.set_page_config(
+    page_title=style_config.page_titles,
+    page_icon=style_config.page_favicon
+)
+
+insert_page_heading("# ⛳️ Matches", style_config.page_favicon)
 st.write("---")
 st.sidebar.markdown("# ⛳️ Matches")
 st.sidebar.markdown("---")
