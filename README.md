@@ -6,8 +6,13 @@ Application to store and visualize soccer stats.
 - Streamlit frontend  
 - PostgreSQL database  
 
+## Environment
+A conda `environment.yml` is present in the repository. Create your environment with 
+`conda env create -f environment.yml` and activate it with 
+`conda activate soccers_stats`.
+
 ## Usage
-It currently functions with a PostgreSQL database that is running locally.
+The application currently functions with a PostgreSQL database that is running locally.
 Make sure to define local environment variables `DB_SERVER` and `DB_USER`.  
 
 Run the application by, firstly, starting the FastAPI backend using:  
