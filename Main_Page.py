@@ -1,4 +1,8 @@
+import yaml
+from yaml.loader import SafeLoader
+
 import streamlit as st
+import streamlit_authenticator as stauth
 
 import api_requests
 import style_config
@@ -18,19 +22,34 @@ st.sidebar.image(style_config.page_favicon)
 
 st.markdown(
     """
-    Welcome to the Soccer Stats application. Select your desired page using the sidebar.
+    Welcome to your Soccer Buddy! The place the organise your soccer stats. \n
+    ⬅️ Select your desired page using the sidebar.
     """
 )
-
-response_teams = api_requests.get_all_teams()
-response_teams = response_to_json(response_teams)
-teams = [schemas.Team(**team) for team in response_teams]
-OUR_TEAM = [team for team in teams if team.club == "WV-HEDW Zon. 9"][0]
-
-st.write(" ")
-st.write(" ")
 st.write(" ")
 
-st.markdown("###### Your team ")
-st.write(OUR_TEAM)
-st.write("⬆️ This will be taken from login details and should be available throughout the application")
+# Do login
+with open('configs/users.yaml') as file:
+    users = yaml.load(file, Loader=SafeLoader)
+
+authenticator = stauth.Authenticate(
+    users['credentials'],
+    users['cookie']['name'],
+    users['cookie']['key'],
+    users['cookie']['expiry_days'],
+    users['preauthorized']
+)
+name, authentication_status, username = authenticator.login('Login', 'main')
+if authentication_status:
+    OUR_TEAM = users["credentials"]["usernames"][username]["team"]
+
+    st.markdown("###### Your team ")
+    st.write(OUR_TEAM)
+    authenticator.logout('Logout', 'main')
+
+elif authentication_status == False:
+    st.error('Username/password is incorrect')
+elif authentication_status == None:
+    st.warning('Please enter your username and password')
+
+# st.write("⬆️ This will be taken from login details and should be available throughout the application")
