@@ -29,7 +29,7 @@ and, secondly, the Streamlit frontend using:
 `streamlit run Main_Page.py`  
 
 ## Re-initialization of data
-To re-initialize all tables or to perfrom an initial load, follow the steps above and 
+To re-initialize all tables or to perform an initial load, follow the steps above and 
 navigate to the *Insert Data* page in the frontend. Here follow the instructions at 
 the top of the page:
 
