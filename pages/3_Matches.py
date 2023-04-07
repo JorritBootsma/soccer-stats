@@ -6,7 +6,6 @@ import api_requests
 import style_config
 from helper_funcs.general_funcs import response_to_json
 import schemas
-from Main_Page import OUR_TEAM
 from helper_funcs.streamlit_components import insert_page_heading
 
 locale.setlocale(locale.LC_ALL, "nl_NL")
@@ -68,11 +67,11 @@ st.markdown(
     """, unsafe_allow_html=True
 )
 
+OUR_TEAM = st.session_state["team"]
 
 for match in matches:
     st.sidebar.markdown(f"##### {match.date.strftime('%a %-d %b. %Y')}")
     st.write(match.date.strftime("%a %-d %b. %Y"))
-    # st.write(f"{match.date}")
     date, home_team, score, away_team = st.columns([1, 2.5, .5, 4])
     home_team.markdown(f"###### {match.home_team.club}")
     if OUR_TEAM == match.home_team:

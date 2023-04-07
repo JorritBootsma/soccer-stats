@@ -5,6 +5,7 @@ Application to store and visualize soccer stats.
 - FastAPI backend  
 - Streamlit frontend  
 - PostgreSQL database  
+- SQLAlchemy ORM  
 
 ## Environment
 A conda `environment.yml` is present in the repository. Create your environment with 
