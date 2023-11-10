@@ -35,6 +35,9 @@ authenticator = stauth.Authenticate(
     users["preauthorized"],
 )
 
+# Hardcode Logout when wrong user logged in
+# authenticator.logout("Logout_", "main")
+
 name, authentication_status, username = authenticator.login("Login", "main")
 if authentication_status:
     team_name = users["credentials"]["usernames"][username]["team"]
@@ -47,7 +50,11 @@ if authentication_status:
         schemas.Team(**team)
         for team in response_teams
         if schemas.Team(**team).club == team_name
-    ][0]
+    ]
+    if st.session_state["team"]:
+        st.session_state["team"] = st.session_state["team"][0]
+    else:
+        st.write("No team found for this user.")
 
     st.markdown(f"###### Welcome:  {username.capitalize()}")
     st.markdown(f"###### Your team: {st.session_state['team'].club}")
