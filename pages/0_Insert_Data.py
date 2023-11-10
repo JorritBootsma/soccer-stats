@@ -17,15 +17,15 @@ st.set_page_config(
 insert_page_heading("# 🧑‍💻 Insert Data", style_config.page_favicon)
 st.sidebar.markdown("# 🧑‍💻 Insert Data")
 
-st.write("---")
-st.write("To **delete** all data and re-initialize the tables: type 'reset all tables' in the textbox")
-reset_all_tables = st.text_input(
-    "Reset Tables",
-)
-if reset_all_tables == "reset all tables":
-    api_requests.initialize_tables()
-    st.error("All tables are deleted and re-created using `initial_load.py`")
-st.write("---")
+# st.write("---")
+# st.write("To **delete** all data and re-initialize the tables: type 'reset all tables' in the textbox")
+# reset_all_tables = st.text_input(
+#     "Reset Tables",
+# )
+# if reset_all_tables == "reset all tables":
+#     api_requests.initialize_tables()
+#     st.error("All tables are deleted and re-created using `initial_load.py`")
+# st.write("---")
 
 # Load all players from database
 response_players = api_requests.get_all_players()
@@ -34,13 +34,13 @@ players = [schemas.Player(**player) for player in response_players]
 # st.write("Player object example: ", players[0])
 # st.write("Type: ", type(players[0]))
 
-with st.form("Create tables"):
-    st.write("Create tables")
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        response = api_requests.create_tables()
-        st.subheader("Response")
-        st.write(response)
+# with st.form("Create tables"):
+#     st.write("Create tables")
+#     submitted = st.form_submit_button("Submit")
+#     if submitted:
+#         response = api_requests.create_tables()
+#         st.subheader("Response")
+#         st.write(response)
 
 
 # Load all teams from database
@@ -288,113 +288,114 @@ else:  # When the number of goals are inserted, show this amount of rows to spec
 #     "Wie hebben de deur op slot gedaan bij de club?", active_players
 # )
 
-st.write("---")
-st.header("--- Below is for testing ---")
-st.write(players[0])
-
-with st.form("Get Player Goals"):
-    st.write("##### Get Player Goals")
-    index = int(st.text_input("Index in players list (8 = ijsbrand)", value=8))
-    player = players[index]
-    st.write(player)
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        response = api_requests.get_player_goals(player)
-
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response)
-            test_players = response_to_json(response)
-            st.write(test_players)
-
-
-with st.form("Get Information Of Specific Player"):
-    st.write("##### Get Info of Specific Player")
-    index = int(st.text_input("Index in players list (8 = ijsbrand)", value=8))
-    player = players[index]
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        st.write(player)
-        response = api_requests.get_player_with_performance(player)
-
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response)
-            test_players = response_to_json(response)
-            st.write(test_players)
-
-
-with st.form("Get Player information"):
-    st.write("##### Get All Player Information")
-
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        test_players = api_requests.get_all_players_with_performance()
-
-        if 'ERROR' in test_players.json():
-            st.error(test_players.json())
-        else:
-            st.write(test_players)
-            test_players = response_to_json(test_players)
-            st.write(test_players)
-
-        st.subheader("Response")
-
-st.write("---")
-st.write("---")
-
-
-with st.form("Create Player"):
-    name = st.text_input("Player name")
-    birth_date = st.text_input("Birth date (in yyyy-mm-dd)")
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        response = api_requests.create_player(name, birth_date)
-        st.subheader("Response")
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response.json())
-
-
-with st.form("Create Team"):
-    name = st.text_input("Team name")
-    submitted = st.form_submit_button("Submit Team")
-    if submitted:
-        response = api_requests.create_team(name)
-        st.subheader("Response")
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response.json())
-
-
-with st.form("Create Card"):
-    name = st.text_input("Card type")
-    submitted = st.form_submit_button("Submit Card")
-    if submitted:
-        response = api_requests.create_card(name)
-        st.subheader("Response")
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response.json())
-
-
-with st.form("Create Goal"):
-    goal_scorer = st.text_input("Goal scorer")
-    assist_giver = st.text_input("Assist giver")
-    body_part = st.selectbox("Body part", options=["Left foot", "Right foot", "Header"])
-    half = st.selectbox("Half", options=['First half', 'Second half'])
-    submitted = st.form_submit_button("Submit Goal")
-    if submitted:
-        response = api_requests.create_goal(goal_scorer, assist_giver, body_part, half)
-        st.subheader("Response")
-        if 'ERROR' in response.json():
-            st.error(response.json())
-        else:
-            st.write(response.json())
-
+### BELOW IS FOR TESTING ###
+# st.write("---")
+# st.header("--- Below is for testing ---")
+# st.write(players[0])
+#
+# with st.form("Get Player Goals"):
+#     st.write("##### Get Player Goals")
+#     index = int(st.text_input("Index in players list (8 = ijsbrand)", value=8))
+#     player = players[index]
+#     st.write(player)
+#     submitted = st.form_submit_button("Submit")
+#     if submitted:
+#         response = api_requests.get_player_goals(player)
+#
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response)
+#             test_players = response_to_json(response)
+#             st.write(test_players)
+#
+#
+# with st.form("Get Information Of Specific Player"):
+#     st.write("##### Get Info of Specific Player")
+#     index = int(st.text_input("Index in players list (8 = ijsbrand)", value=8))
+#     player = players[index]
+#     submitted = st.form_submit_button("Submit")
+#     if submitted:
+#         st.write(player)
+#         response = api_requests.get_player_with_performance(player)
+#
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response)
+#             test_players = response_to_json(response)
+#             st.write(test_players)
+#
+#
+# with st.form("Get Player information"):
+#     st.write("##### Get All Player Information")
+#
+#     submitted = st.form_submit_button("Submit")
+#     if submitted:
+#         test_players = api_requests.get_all_players_with_performance()
+#
+#         if 'ERROR' in test_players.json():
+#             st.error(test_players.json())
+#         else:
+#             st.write(test_players)
+#             test_players = response_to_json(test_players)
+#             st.write(test_players)
+#
+#         st.subheader("Response")
+#
+# st.write("---")
+# st.write("---")
+#
+#
+# with st.form("Create Player"):
+#     name = st.text_input("Player name")
+#     birth_date = st.text_input("Birth date (in yyyy-mm-dd)")
+#     submitted = st.form_submit_button("Submit")
+#     if submitted:
+#         response = api_requests.create_player(name, birth_date)
+#         st.subheader("Response")
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response.json())
+#
+#
+# with st.form("Create Team"):
+#     name = st.text_input("Team name")
+#     submitted = st.form_submit_button("Submit Team")
+#     if submitted:
+#         response = api_requests.create_team(name)
+#         st.subheader("Response")
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response.json())
+#
+#
+# with st.form("Create Card"):
+#     name = st.text_input("Card type")
+#     submitted = st.form_submit_button("Submit Card")
+#     if submitted:
+#         response = api_requests.create_card(name)
+#         st.subheader("Response")
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response.json())
+#
+#
+# with st.form("Create Goal"):
+#     goal_scorer = st.text_input("Goal scorer")
+#     assist_giver = st.text_input("Assist giver")
+#     body_part = st.selectbox("Body part", options=["Left foot", "Right foot", "Header"])
+#     half = st.selectbox("Half", options=['First half', 'Second half'])
+#     submitted = st.form_submit_button("Submit Goal")
+#     if submitted:
+#         response = api_requests.create_goal(goal_scorer, assist_giver, body_part, half)
+#         st.subheader("Response")
+#         if 'ERROR' in response.json():
+#             st.error(response.json())
+#         else:
+#             st.write(response.json())
+#
 
