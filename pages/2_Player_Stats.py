@@ -21,15 +21,10 @@ st.sidebar.markdown("# 🏃 Player Stats")
 if "team" not in st.session_state:
     st.write("Make sure to login first. Go to the Login page via the sidebar.")
 else:
-    st.write(st.session_state["team"])
-    st.write(st.session_state["team"].id)
-    st.write(type(st.session_state["team"].id))
-
     # Load all players from database
     response_players = api_requests.get_all_players(team=st.session_state["team"])
     response_players = response_to_json(response_players)
     players = [schemas.Player(**player) for player in response_players]
-    st.write(players)
 
     player = st.selectbox(
         "Van welke speler wil je statistieken zien?",

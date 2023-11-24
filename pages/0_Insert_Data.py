@@ -10,8 +10,7 @@ from helper_funcs.streamlit_components import insert_page_heading
 import schemas
 
 st.set_page_config(
-    page_title=style_config.page_titles,
-    page_icon=style_config.page_favicon
+    page_title=style_config.page_titles, page_icon=style_config.page_favicon
 )
 
 insert_page_heading("# 🧑‍💻 Insert Data", style_config.page_favicon)
@@ -45,12 +44,11 @@ else:
     #         st.subheader("Response")
     #         st.write(response)
 
-
     # Load all teams from database
     response_teams = api_requests.get_all_teams()
     response_teams = response_to_json(response_teams)
     teams = [schemas.Team(**team) for team in response_teams]
-    our_team = [team for team in teams if team.club=="WV-HEDW Zon. 9"][0]
+    our_team = [team for team in teams if team.club == "WV-HEDW Zon. 9"][0]
     # st.write(our_team)
 
     # st.write("Club object example: ", teams[0])
@@ -66,14 +64,12 @@ else:
     game_time = time.time_input("Tijd", value=datetime.time(hour=9, minute=0))
     # Match
     opponent = st.selectbox(
-        "Tegenstander",
-        options=teams,
-        format_func=lambda option: option.club
+        "Tegenstander", options=teams, format_func=lambda option: option.club
     )
     play_at_home = st.selectbox(
         "Thuis of uit?",
         options=[True, False],
-        format_func=lambda option: "Thuis" if option else "Uit"
+        format_func=lambda option: "Thuis" if option else "Uit",
     )
     if play_at_home:
         st.subheader(f"Affiche: {our_team.club} - {opponent.club}")
@@ -124,7 +120,6 @@ else:
 
         counter += 1
 
-
     # Extract the active players from the session_state using
     active_players = [
         players[int(player_idx[2:])]
@@ -132,6 +127,7 @@ else:
         if "p_" in player_idx and active
     ]
     other_players = [
+        # schemas.Player(name=other_player_name, team_id=st.session_state["team"].id)
         other_player_name
         for other_player_idx, other_player_name in st.session_state.items()
         if "invaller_" in other_player_idx and other_player_name != ""
@@ -141,7 +137,9 @@ else:
     active_players = active_players + other_players
 
     st.write("### Doelpuntenmakers")
-    if not num_of_goals or not num_of_opponent_goals:  # Before specifying, the number of scored goals need to be inserted
+    if (
+        not num_of_goals or not num_of_opponent_goals
+    ):  # Before specifying, the number of scored goals need to be inserted
         st.warning(
             "Selecteer doelpuntenmakers nadat je de eindstand bovenaan hebt ingevoerd."
         )
@@ -153,13 +151,17 @@ else:
                     "Doelpuntenmaker",
                     options=active_players,
                     key=f"goal_{idx}",
-                    format_func=lambda option: option.name
+                    format_func=lambda option: option
+                    if isinstance(option, str)
+                    else option.name,
                 )
                 assist.selectbox(
                     "Assist",
                     options=["Assistloos"] + active_players,
                     key=f"assist_{idx}",
-                    format_func=lambda option: None if option == "Assistloos" else option.name
+                    format_func=lambda option: option
+                    if isinstance(option, str)
+                    else option.name,
                 )
                 body_part.selectbox(
                     "Lichaamsdeel", options=["R", "L", "Hoofd"], key=f"body_part_{idx}"
@@ -179,14 +181,18 @@ else:
                     options=active_players,
                     key=f"goal_{idx}",
                     label_visibility="collapsed",
-                    format_func=lambda option: option.name
+                    format_func=lambda option: option
+                    if isinstance(option, str)
+                    else option.name,
                 )
                 assist.selectbox(
                     "Assist",
                     options=["Assistloos"] + active_players,
                     key=f"assist_{idx}",
                     label_visibility="collapsed",
-                    format_func=lambda option: None if option == "Assistloos" else option.name
+                    format_func=lambda option: option
+                    if isinstance(option, str)
+                    else option.name,
                 )
                 body_part.selectbox(
                     "Lichaamsdeel",
@@ -217,11 +223,18 @@ else:
             their_goals=int(num_of_opponent_goals),
         )
 
-        players_present = active_players
+        # Add *only* real active players to the match object (skip invallers)
+        players_present = [
+            active_player
+            for active_player in active_players
+            if isinstance(active_player, schemas.Player)
+        ]
         match.players_present = players_present
 
         goals = []
         for idx in range(int(num_of_goals)):
+            # TODO: Make sure string values are also accepted by schemas.GoalBase to
+            #  allow for `Assistloos` and `Invaller` as goalscorer and assist_giver
             goal_scorer = st.session_state[f"goal_{idx}"]
             assist_giver = st.session_state[f"assist_{idx}"]
             body_part = st.session_state[f"body_part_{idx}"]
@@ -239,7 +252,7 @@ else:
         match.our_goals = goals
 
         match.date = match.date.isoformat()
-        st.write('---')
+        st.write("---")
 
         with st.form("Create Match"):
             submitted = st.form_submit_button("Submit")
@@ -251,13 +264,12 @@ else:
                 )
                 st.subheader("Response")
                 st.write(response)
-                if 'ERROR' in response.json():
+                if "ERROR" in response.json():
                     st.error(response.json())
                 else:
                     st.write(response.json())
 
         st.header("#######")
-
 
     # st.write("### Panna's")
     # panna_player, panna_type = st.columns(2)
@@ -401,4 +413,3 @@ else:
     #         else:
     #             st.write(response.json())
     #
-
