@@ -16,10 +16,10 @@ def send_to_database(session_state):
     session_state["save_match_to_db"] = "TO BE IMPLEMENTED"
 
 
-def create_player(name, birth_date):
+def create_player(name, birth_date, team_id):
     url_suffix = "create_player"
     full_url = BASE_URL + url_suffix
-    player = {"name": name, "birth_date": birth_date}
+    player = {"name": name, "birth_date": birth_date, "team_id": team_id}
     response = requests.post(full_url, json=player)
     return response
 
@@ -78,10 +78,13 @@ def create_tables():
     response = requests.post(full_url)
 
 
-def get_all_players() -> Response:
+def get_all_players(team: schemas.Team) -> Response:
     url_suffix = "get_all_players"
     full_url = BASE_URL + url_suffix
-    response = requests.get(full_url)
+    # response = requests.get(full_url)
+    jsonified = json.dumps(team.dict(), default=smart_jsonify)
+    response = requests.get(full_url, data=jsonified)
+
     return response
 
 

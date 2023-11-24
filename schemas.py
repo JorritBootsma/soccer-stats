@@ -31,6 +31,7 @@ class Team(TeamBase):
 class PlayerBase(BaseModel):
     name: Optional[str]
     birth_date: Optional[datetime.date]
+    team_id: Optional[int]
 
 
 class PlayerCreate(PlayerBase):

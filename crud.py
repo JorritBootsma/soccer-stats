@@ -1,7 +1,7 @@
 from typing import List, Union
 
 from sqlalchemy.orm import Session
-
+from sqlalchemy import select
 import models
 import schemas
 
@@ -16,8 +16,8 @@ def get_team_by_id(db: Session, id):
     return x
 
 
-def get_all_players(db: Session, skip: int = 0, limit: int = 10000):
-    x = db.query(models.Player).offset(skip).limit(limit).all()
+def get_all_players(db: Session, team_id, skip: int = 0, limit: int = 10000):
+    x = db.query(models.Player).filter(models.Player.team_id == team_id).offset(skip).limit(limit).all()
     return x
 
 

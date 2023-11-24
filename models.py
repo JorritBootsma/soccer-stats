@@ -149,6 +149,7 @@ class Player(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True)
     birth_date = Column(Date)
+    team_id = Column(Integer, ForeignKey("teams.id"))
 
     # One player can have many goals_scored, assists_given and cards_received
     goals_scored = relationship(

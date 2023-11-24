@@ -35,7 +35,7 @@ def fill_players_table(player_list: list[dict] = players):
     Bulk load a team of players.
 
     :param player_list: List[dict]
-      Expected is a list of dictionaries with keys `name` and `birth_date`.
+      Expected is a list of dictionaries with keys `name`, `birth_date` and `team_id`.
     :return:
      None
     """
@@ -44,7 +44,8 @@ def fill_players_table(player_list: list[dict] = players):
         print(player)
         name = player["name"]
         birth_date = player["birth_date"]
-        create_player(name, birth_date)
+        team_id = player["team_id"]
+        create_player(name, birth_date, team_id)
 
 
 def fill_teams_table(teams_list: list[str] = teams):
@@ -65,4 +66,5 @@ if __name__ == "__main__":
     from database import Base, engine
 
     drop_and_create(Base, engine)
+    fill_teams_table()
     fill_players_table()

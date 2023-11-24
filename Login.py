@@ -35,6 +35,10 @@ authenticator = stauth.Authenticate(
     users["preauthorized"],
 )
 
+if st.session_state['logout']:
+    for key in st.session_state.keys():
+        del st.session_state[key]
+
 # Hardcode Logout when wrong user logged in
 # authenticator.logout("Logout_", "main")
 
@@ -47,17 +51,18 @@ if authentication_status:
     teams = [schemas.Team(**team) for team in response_teams]
 
     st.session_state["team"] = [
-        schemas.Team(**team)
-        for team in response_teams
-        if schemas.Team(**team).club == team_name
+        team
+        for team in teams
+        if team.club == team_name
     ]
     if st.session_state["team"]:
         st.session_state["team"] = st.session_state["team"][0]
+        st.markdown(f"###### Welcome  {username.capitalize()}!")
+        st.markdown(f"###### Your team: {st.session_state['team'].club}")
     else:
-        st.write("No team found for this user.")
+        st.markdown(f"###### Welcome:  {username.capitalize()}")
+        st.markdown(f"###### Your team: No team found for this user.")
 
-    st.markdown(f"###### Welcome:  {username.capitalize()}")
-    st.markdown(f"###### Your team: {st.session_state['team'].club}")
     st.markdown("⬅️ Select your desired page using the sidebar.")
 elif authentication_status is False:
     st.error("Username/password is incorrect")
@@ -68,3 +73,4 @@ if authentication_status:
     empty_col, logout_col = st.columns([10, 2])
     with logout_col:
         authenticator.logout("Logout", "main")
+

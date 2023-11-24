@@ -44,8 +44,8 @@ def create_tables():
 
 
 @app.get("/get_all_players", response_model=list[schemas.Player])
-def get_all_players(db: Session = Depends(get_db)):
-    players = crud.get_all_players(db)
+def get_all_players(team: schemas.Team, db: Session = Depends(get_db)):
+    players = crud.get_all_players(db=db, team_id=team.id)
     print(players)
     return players
 
