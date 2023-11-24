@@ -29,9 +29,7 @@ Run the application by, firstly, starting the FastAPI backend using:
 and, secondly, the Streamlit frontend using:  
 `streamlit run Main_Page.py`  
 
-## Re-initialization of data
-To re-initialize all tables or to perform an initial load, follow the steps above and 
-navigate to the *Insert Data* page in the frontend. Here follow the instructions at 
-the top of the page:
-
-![Re-initializing data](images/readme_images/instruction_reinitialization_of_tables.png)
+## (Re-)initialization of data
+To re-initialize all tables or to perform an initial load, run `initial_load.py`. 
+This creates a new database and loads the dummy data from the JSON files in the config
+folder.
