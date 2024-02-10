@@ -1,0 +1,155 @@
+{
+  "players": [
+    {
+      'id': 'player1',
+      'name': 'Rasmus Kristensen',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player2',
+      'name': 'Joël Veltman',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player3',
+      'name': 'Matthijs de Ligt',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player4',
+      'name': 'Donny van de Beek',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player5',
+      'name': 'David Neres',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player6',
+      'name': 'Daley Sinkgraven',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player7',
+      'name': 'Klaas-Jan Huntelaar',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player8',
+      'name': 'Dušan Tadić',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player9',
+      'name': 'Noussair Mazraoui',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player10',
+      'name': 'Carel Eiting',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player11',
+      'name': 'Lisandro Magallán',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player12',
+      'name': 'Daley Blind',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player13',
+      'name': 'Hassane Bandé',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player14',
+      'name': 'Zakaria Labyad',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player15',
+      'name': 'Lasse Schöne',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player16',
+      'name': 'Frenkie de Jong',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player17',
+      'name': 'Hakim Ziyech',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player18',
+      'name': 'Lassina Traoré',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player19',
+      'name': 'André Onana',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player20',
+      'name': 'Kasper Dolberg',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player21',
+      'name': 'Kostas Lamprou',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player22',
+      'name': 'Perr Schuurs',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player23',
+      'name': 'Bruno Varela',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player24',
+      'name': 'Dani de Wit',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player25',
+      'name': 'Nicolás Tagliafico',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player26',
+      'name': 'Václav Černý',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player27',
+      'name': 'Mitchel Bakker',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player28',
+      'name': 'Noa Lang',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player29',
+      'name': 'Ryan Gravenberch',
+      'team': 'ajax'
+    },
+    {
+      'id': 'player30',
+      'name': 'Jurgen Ekkelenkamp',
+      'team': 'ajax'
+    }
+  ]
+}
+

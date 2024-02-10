@@ -1,0 +1,12 @@
+{
+  "competitions": [
+    {
+      "id": "competition1", // should be a unique id
+      "name": "Champions League",
+    },
+    {
+      "id": "competition2", // should be a unique id
+      "name": "Eredivisie",
+    }
+  ]
+}

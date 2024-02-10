@@ -1,0 +1,45 @@
+{
+  "matches": [
+    {
+      "id": "match1", // should be a unique id
+      "date": "2019-01-01",
+      "season": "2018-2019", // should be a season id
+      "competition": "competition1", // should be a competition id
+      "home_team": "team1", // should be a team id
+      "away_team": "team2", // should be a team id
+      "home_or_away": "home", // home, away
+      "home_team_score": 2,
+      "away_team_score": 1,
+      "players_present": [
+        "player1", // should be a player id
+        "player2"  // should be a player id
+      ],
+      "goals": [
+        {
+          "goal_scorer": "player1", // should be a player id
+          "assist_giver": null,
+          "goal_type": "penalty", // penalty, free-kick, regular
+          "body_part": "right-foot", // left-foot, right-foot, header
+          "in_or_outside_box": "inside" // inside, outside
+        },
+        {
+          "goal_scorer": "player1",
+          "assist_giver": "player2",
+          "goal_type": "regular", // penalty, free-kick, regular
+          "body_part": "left-foot", // left-foot, right-foot, header
+          "in_or_outside_box": "outside" // inside, outside
+        }
+      ],
+      "cards": [
+        {
+          "player": "player1",
+          "card_type": "yellow" // yellow, red
+        },
+        {
+          "player": "player2",
+          "card_type": "red"
+        }
+      ]
+    }
+  ]
+}

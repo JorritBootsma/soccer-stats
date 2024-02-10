@@ -1,0 +1,20 @@
+{
+  "teams": [
+    {
+      "id": "team1", // should be a unique id
+      "name": "AFC Ajax",
+    },
+    {
+      "id": "team2", // should be a unique id
+      "name": "Bayern Munich",
+    },
+    {
+      "id": "team3", // should be a unique id
+      "name": "Benfica",
+    },
+    {
+      "id": "team4", // should be a unique id
+      "name": "AEK Athens",
+    }
+  ]
+}
