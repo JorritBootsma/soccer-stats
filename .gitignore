@@ -1,3 +1,5 @@
 .idea
 __pycache__
 .streamlit/secrets.toml
+mongodb/mongo_config.py
+configs/users.yaml
